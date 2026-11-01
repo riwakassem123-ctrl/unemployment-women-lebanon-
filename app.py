@@ -40,7 +40,6 @@ for column in ["Total", "Female", "Male"]:
 return df.dropna(subset=["Year"]).sort_values("Year")
 try:
 df = load_data()
-# Sidebar year filter
 st.sidebar.header("Dashboard Filters")
 years = st.sidebar.slider(
 "Select year range",
