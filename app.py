@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-Page settings
+#Page settings
 st.set_page_config(
 page_title="Women's Employment in Lebanon",
 page_icon="📊",
