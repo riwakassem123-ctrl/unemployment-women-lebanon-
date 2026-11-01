@@ -17,8 +17,7 @@ with a focus on differences between total, female, and male unemployment.
 #Load Excel data
 @st.cache_data
 def load_data():
- @st.cache_data
-def load_data():
+
     df = pd.read_excel("lebanon_data.xlsx")
     df.columns = df.columns.str.strip()
 
