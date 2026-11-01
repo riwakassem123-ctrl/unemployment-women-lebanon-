@@ -12,7 +12,7 @@ def load_data():
     df = pd.read_excel("lebanon_data.xlsx")
 df.columns = df.columns.str.strip()
 required_columns = ["Year", "Total", "Female", "Male"]
-for column in required_columns:
+    for column in required_columns:
 if column not in df.columns:
 raise ValueError(
 f"Missing column: {column}. "
