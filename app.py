@@ -1,4 +1,4 @@
-import streamlit as st
+#import streamlit as st
 import pandas as pd
 import plotly.express as px
 #Page settings
@@ -14,7 +14,7 @@ st.markdown("""
 This dashboard explores unemployment trends in Lebanon,
 with a focus on differences between total, female, and male unemployment.
 """)
-Load Excel data
+#Load Excel data
 @st.cache_data
 def load_data():
 df = pd.read_excel("lebanon_data.xlsx")
