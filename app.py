@@ -7,7 +7,7 @@ page_title="Women's Employment in Lebanon",
 page_icon="📊",
 layout="wide"
 )
-Dashboard title
+# Dashboard title
 st.title("The Invisible Workforce")
 st.subheader("Understanding Unemployment in Lebanon (1990–2023)")
 st.markdown("""
