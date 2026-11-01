@@ -36,7 +36,7 @@ df = pd.read_excel("lebanon_data.xlsx")
 df.columns = df.columns.str.strip()
 df["Year"] = pd.to_numeric(df["Year"], errors="coerce")
 for column in ["Total", "Female", "Male"]:
-df[column] = pd.to_numeric(df[column], errors="coerce")
+   df[column] = pd.to_numeric(df[column], errors="coerce")
 return df.dropna(subset=["Year"]).sort_values("Year")
 try:
 df = load_data()
