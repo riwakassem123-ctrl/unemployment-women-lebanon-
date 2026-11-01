@@ -12,7 +12,7 @@ st.title("Women Unemployment in Lebanon Dashboard")
 
 @st.cache_data
 def load_data():
-    df = pd.read_excel("lebanon_data.xlsx")
+    df = pd.read_excel("unemployment women lebanon.xls")
     return df
 
 try:
