@@ -9,7 +9,7 @@ layout="wide"
 
 @st.cache_data
 def load_data():
-df = pd.read_excel("lebanon_data.xlsx")
+    df = pd.read_excel("lebanon_data.xlsx")
 df.columns = df.columns.str.strip()
 required_columns = ["Year", "Total", "Female", "Male"]
 for column in required_columns:
