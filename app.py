@@ -39,7 +39,7 @@ for column in ["Total", "Female", "Male"]:
    df[column] = pd.to_numeric(df[column], errors="coerce")
 return df.dropna(subset=["Year"]).sort_values("Year")
 try:
-df = load_data()
+  df = load_data()
 st.sidebar.header("Dashboard Filters")
 years = st.sidebar.slider(
 "Select year range",
