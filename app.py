@@ -1,13 +1,12 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-PAGE SETTINGS
 st.set_page_config(
 page_title="Women's Employment in Lebanon",
 page_icon="📊",
 layout="wide"
 )
-LOAD DATA
+
 @st.cache_data
 def load_data():
 df = pd.read_excel("lebanon_data.xlsx")
@@ -25,7 +24,7 @@ df = df.dropna(subset=["Year"])
 df = df.sort_values("Year")
 return df
 
-MAIN DASHBOARD
+
 st.title("The Invisible Workforce")
 st.subheader("Understanding Unemployment in Lebanon (1990–2023)")
 st.write(
