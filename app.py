@@ -17,6 +17,22 @@ with a focus on differences between total, female, and male unemployment.
 #Load Excel data
 @st.cache_data
 def load_data():
+ @st.cache_data
+def load_data():
+    df = pd.read_excel("lebanon_data.xlsx")
+    df.columns = df.columns.str.strip()
+
+    df["Year"] = pd.to_numeric(df["Year"], errors="coerce")
+
+    for column in ["Total", "Female", "Male"]:
+        df[column] = pd.to_numeric(df[column], errors="coerce")
+
+    df = df.dropna(subset=["Year"])
+    df = df.sort_values("Year")
+
+    return df
+
+ 
 df = pd.read_excel("lebanon_data.xlsx")
 df.columns = df.columns.str.strip()
 df["Year"] = pd.to_numeric(df["Year"], errors="coerce")
