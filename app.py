@@ -2,56 +2,43 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 st.set_page_config(
-page_title="Women's Employment in Lebanon",
+page_title="Unemployment in Lebanon",
 page_icon="📊",
 layout="wide"
 )
-
-@st.cache_data
-def load_data():
-    df = pd.read_excel("lebanon_data.xlsx")
-df.columns = df.columns.str.strip()
-required_columns = ["Year", "Total", "Female", "Male"]
-    for column in required_columns:
-if column not in df.columns:
-raise ValueError(
-f"Missing column: {column}. "
-f"Available columns: {list(df.columns)}"
+st.title("The Invisible Workforce")
+st.subheader("Understanding Unemployment in Lebanon")
+st.write(
+"Explore unemployment trends in Lebanon from 1990 to 2023, "
+"comparing total, female, and male unemployment rates."
 )
-for column in required_columns:
-df[column] = pd.to_numeric(df[column], errors="coerce")
+Load Excel data
+df = pd.read_excel("lebanon_data.xlsx")
+df.columns = df.columns.str.strip()
+Convert columns to numbers
+df["Year"] = pd.to_numeric(df["Year"], errors="coerce")
+df["Total"] = pd.to_numeric(df["Total"], errors="coerce")
+df["Female"] = pd.to_numeric(df["Female"], errors="coerce")
+df["Male"] = pd.to_numeric(df["Male"], errors="coerce")
 df = df.dropna(subset=["Year"])
 df = df.sort_values("Year")
-return df
-
-
-st.title("The Invisible Workforce")
-st.subheader("Understanding Unemployment in Lebanon (1990–2023)")
-st.write(
-"This interactive dashboard explores unemployment trends "
-"in Lebanon, comparing total, female, and male unemployment rates."
-)
-try:
-df = load_data()
-# SIDEBAR FILTER
-st.sidebar.title("Dashboard Filters")
-minimum_year = int(df["Year"].min())
-maximum_year = int(df["Year"].max())
+Dashboard filters
+st.sidebar.header("Dashboard Filters")
+min_year = int(df["Year"].min())
+max_year = int(df["Year"].max())
 selected_years = st.sidebar.slider(
-"Select year range",
-min_value=minimum_year,
-max_value=maximum_year,
-value=(minimum_year, maximum_year)
+"Choose year range",
+min_year,
+max_year,
+(min_year, max_year)
 )
 filtered = df[
 (df["Year"] >= selected_years[0]) &
 (df["Year"] <= selected_years[1])
-].copy()
-if filtered.empty:
-st.warning("No data available for this year range.")
-else:
-# LATEST INDICATORS
+]
+Unemployment overview
 st.header("Unemployment Overview")
+if not filtered.empty:
 latest = filtered.iloc[-1]
 col1, col2, col3 = st.columns(3)
 col1.metric(
@@ -67,11 +54,10 @@ col3.metric(
 f'{latest["Male"]:.1f}%'
 )
 st.caption(
-f"Figures shown for the latest available year in the "
-f"selected range: {int(latest['Year'])}."
+f'Latest selected year: {int(latest["Year"])}'
 )
-# CHART 1: GENDER COMPARISON
-st.header("1. The Gender Unemployment Gap")
+# Chart 1: Gender comparison
+st.header("1. Gender Unemployment Comparison")
 gender_data = filtered.melt(
 id_vars=["Year"],
 value_vars=["Female", "Male"],
@@ -84,20 +70,18 @@ x="Year",
 y="Unemployment Rate",
 color="Gender",
 markers=True,
-title="Female vs. Male Unemployment in Lebanon"
+title="Female vs Male Unemployment in Lebanon"
 )
 fig1.update_layout(
 xaxis_title="Year",
-yaxis_title="Unemployment rate (% of respective labour force)",
-legend_title="Gender"
+yaxis_title="Unemployment Rate (%)"
 )
-st.plotly_chart(fig1, use_container_width=True)
-st.write(
-"This chart compares unemployment rates among women "
-"and men over time."
+st.plotly_chart(
+fig1,
+use_container_width=True
 )
-# CHART 2: TOTAL UNEMPLOYMENT
-st.header("2. Overall Unemployment Trend")
+# Chart 2: Total unemployment
+st.header("2. Total Unemployment Trend")
 fig2 = px.line(
 filtered,
 x="Year",
@@ -107,11 +91,14 @@ title="Total Unemployment in Lebanon"
 )
 fig2.update_layout(
 xaxis_title="Year",
-yaxis_title="Unemployment rate (% of total labour force)"
+yaxis_title="Unemployment Rate (%)"
 )
-st.plotly_chart(fig2, use_container_width=True)
-# CHART 3: ALL INDICATORS
-st.header("3. Comparing All Three Indicators")
+st.plotly_chart(
+fig2,
+use_container_width=True
+)
+# Chart 3: All indicators
+st.header("3. Overall Comparison")
 all_data = filtered.melt(
 id_vars=["Year"],
 value_vars=["Total", "Female", "Male"],
@@ -124,27 +111,27 @@ x="Year",
 y="Unemployment Rate",
 color="Indicator",
 markers=True,
-title="Unemployment Trends by Indicator"
+title="Total, Female and Male Unemployment"
 )
 fig3.update_layout(
 xaxis_title="Year",
-yaxis_title="Unemployment rate (%)",
-legend_title="Indicator"
+yaxis_title="Unemployment Rate (%)"
 )
-st.plotly_chart(fig3, use_container_width=True)
-# DATA TABLE
-with st.expander("View the underlying data"):
-st.dataframe(filtered, use_container_width=True)
+st.plotly_chart(
+fig3,
+use_container_width=True
+)
+# Data table
+with st.expander("View the data"):
+st.dataframe(
+filtered,
+use_container_width=True
+)
+else:
+st.warning("No data available for the selected years.")
 st.caption(
-"Source: World Bank, World Development Indicators (WDI), "
-"based on ILO estimates. Confirm against the original dataset."
+"Source: World Bank, World Development Indicators. "
+"Verify the source against the original dataset."
 )
-except FileNotFoundError:
-st.error(
-"Excel file not found. Make sure lebanon_data.xlsx "
-"is uploaded in the same GitHub repository as app.py."
-)
-except Exception as error:
-st.error(f"An error occurred: {error}")
 
 
