@@ -1,30 +1,32 @@
 import streamlit as st
 import pandas as pd
-import os
-st.write(os.listdir("."))
+import plotly.express as px
+
 # Page settings
 st.set_page_config(
     page_title="Women Unemployment in Lebanon",
     layout="wide"
 )
 
-# Dashboard title
+# Title
 st.title("Women Unemployment in Lebanon Dashboard")
 
+# Load data
 @st.cache_data
 def load_data():
-    f = pd.read_excel(
-    "unemployment rate  women.xlsx",
-    engine="openpyxl"
-)
+    df = pd.read_excel(
+        "unemployment rate  women.xlsx",
+        engine="openpyxl"
+    )
     return df
 
 try:
     df = load_data()
 
-    st.sidebar.header("Dashboard Filters")
+    st.success("Data loaded successfully!")
 
-    st.write(df.head())
+    st.subheader("Raw Data")
+    st.dataframe(df)
 
 except Exception as e:
     st.error(f"Error loading data: {e}")
