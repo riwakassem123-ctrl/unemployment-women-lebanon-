@@ -166,7 +166,7 @@ try:
     df.columns = [str(col).strip() for col in df.columns]
 
     # Replace these with your actual column names if different
-  df = df.rename(columns={
+     df = df.rename(columns={
     df.columns"Year",
     df.columns"Total",
     df.columns"Female",
