@@ -134,3 +134,216 @@ col1, col2, col3 = st.columns(3)
 col1.metric("Latest Total (2023)", f"{df['Total'].iloc[-1]:.2f}%")
 col2.metric("Latest Female (2023)", f"{df['Female'].iloc[-1]:.2f}%")
 col3.metric("Latest Male (2023)", f"{df['Male'].iloc[-1]:.2f}%")
+st.set_page_config(
+    page_title="Women Unemployment in Lebanon",
+    page_icon="📊",
+    layout="wide"
+)
+
+# --------------------------------------------------
+# TITLE & INTRODUCTION
+# --------------------------------------------------
+st.title("📊 Women Unemployment in Lebanon Dashboard")
+st.markdown("""
+This dashboard explores unemployment trends in Lebanon between 1991 and 2023,
+highlighting gender differences and long-term labor market developments.
+""")
+
+# --------------------------------------------------
+# LOAD DATA
+# --------------------------------------------------
+@st.cache_data
+def load_data():
+    return pd.read_excel(
+        "unemployment rate  women.xlsx",
+        engine="openpyxl"
+    )
+
+try:
+    df = load_data()
+
+    # Rename columns if needed
+    df.columns = [str(col).strip() for col in df.columns]
+
+    # Replace these with your actual column names if different
+    df = df.rename(columns={
+        df.columns"Year",
+        df.columns"Total",
+        df.columns"Female",
+        df.columns"Male"
+    })
+
+    # --------------------------------------------------
+    # SIDEBAR FILTERS
+    # --------------------------------------------------
+    st.sidebar.header("🔍 Dashboard Filters")
+
+    min_year = int(df["Year"].min())
+    max_year = int(df["Year"].max())
+
+    selected_years = st.sidebar.slider(
+        "Select Year Range",
+        min_year,
+        max_year,
+        (min_year, max_year)
+    )
+
+    filtered_df = df[
+        (df["Year"] >= selected_years[0]) &
+        (df["Year"] <= selected_years[1])
+    ]
+
+    # --------------------------------------------------
+    # KPI CARDS
+    # --------------------------------------------------
+    st.subheader("📌 Key Indicators")
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric(
+        "Total Unemployment",
+        f"{filtered_df['Total'].iloc[-1]:.1f}%"
+    )
+
+    col2.metric(
+        "Female Unemployment",
+        f"{filtered_df['Female'].iloc[-1]:.1f}%"
+    )
+
+    col3.metric(
+        "Male Unemployment",
+        f"{filtered_df['Male'].iloc[-1]:.1f}%"
+    )
+
+    # --------------------------------------------------
+    # KEY FINDINGS
+    # --------------------------------------------------
+    st.subheader("📈 Main Results")
+
+    gap_latest = (
+        filtered_df["Female"].iloc[-1]
+        - filtered_df["Male"].iloc[-1]
+    )
+
+    highest_female = filtered_df.loc[
+        filtered_df["Female"].idxmax()
+    ]
+
+    st.info(
+        f"""
+        • Female unemployment remains consistently higher than male unemployment.
+
+        • Current gender gap: **{gap_latest:.2f} percentage points**
+
+        • Highest female unemployment:
+          **{highest_female['Female']:.2f}%**
+          in **{int(highest_female['Year'])}**
+
+        • Recent years show elevated unemployment levels linked to economic challenges.
+        """
+    )
+
+    # --------------------------------------------------
+    # TOTAL UNEMPLOYMENT CHART
+    # --------------------------------------------------
+    st.subheader("📉 Total Unemployment Trend")
+
+    fig_total = px.area(
+        filtered_df,
+        x="Year",
+        y="Total",
+        title="Total Unemployment Rate Over Time"
+    )
+
+    st.plotly_chart(fig_total, use_container_width=True)
+
+    # --------------------------------------------------
+    # GENDER COMPARISON
+    # --------------------------------------------------
+    st.subheader("👩 Female vs 👨 Male Unemployment")
+
+    gender_df = filtered_df.melt(
+        id_vars="Year",
+        value_vars=["Female", "Male"],
+        var_name="Gender",
+        value_name="Rate"
+    )
+
+    fig_gender = px.line(
+        gender_df,
+        x="Year",
+        y="Rate",
+        color="Gender",
+        markers=True,
+        title="Gender Comparison"
+    )
+
+    st.plotly_chart(fig_gender, use_container_width=True)
+
+    # --------------------------------------------------
+    # ALL SERIES
+    # --------------------------------------------------
+    st.subheader("📊 Total, Female and Male Trends")
+
+    all_df = filtered_df.melt(
+        id_vars="Year",
+        value_vars=["Total", "Female", "Male"],
+        var_name="Series",
+        value_name="Rate"
+    )
+
+    fig_all = px.line(
+        all_df,
+        x="Year",
+        y="Rate",
+        color="Series",
+        markers=True,
+        title="Unemployment Trends"
+    )
+
+    st.plotly_chart(fig_all, use_container_width=True)
+
+    # --------------------------------------------------
+    # GENDER GAP
+    # --------------------------------------------------
+    st.subheader("⚖️ Gender Gap Analysis")
+
+    filtered_df["Gap"] = (
+        filtered_df["Female"] -
+        filtered_df["Male"]
+    )
+
+    fig_gap = px.bar(
+        filtered_df,
+        x="Year",
+        y="Gap",
+        color="Gap",
+        title="Female-Male Unemployment Gap"
+    )
+
+    st.plotly_chart(fig_gap, use_container_width=True)
+
+    # --------------------------------------------------
+    # DATA TABLE
+    # --------------------------------------------------
+    st.subheader("📋 Data Explorer")
+
+    st.dataframe(
+        filtered_df,
+        use_container_width=True
+    )
+
+    # --------------------------------------------------
+    # DOWNLOAD BUTTON
+    # --------------------------------------------------
+    csv = filtered_df.to_csv(index=False)
+
+    st.download_button(
+        label="📥 Download Filtered Data",
+        data=csv,
+        file_name="lebanon_unemployment.csv",
+        mime="text/csv"
+    )
+
+except Exception as e:
+    st.error(f"Error loading data: {e}")
