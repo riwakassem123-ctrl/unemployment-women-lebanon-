@@ -455,7 +455,6 @@ emp_pop = metrics.get(
 lfp_gap = (
 lfp.get("Men", float("nan"))
 o	lfp.get("Women", float("nan"))
-•	)
 def metric_card(label, value, sub):
 st.markdown(
 f"""
