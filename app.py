@@ -4,7 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
-THE INVISIBLE WORKFORCE | STREAMLIT DATA-STORYTELLING DASHBOARD
+#THE INVISIBLE WORKFORCE | STREAMLIT DATA-STORYTELLING DASHBOARD
 Lebanon Labour Force and Household Living Conditions Survey 2022
 + World Bank WDI unemployment series
 -----------------------------------------------------------------------------
