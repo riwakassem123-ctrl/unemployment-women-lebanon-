@@ -207,7 +207,7 @@ field: data.iloc[:, column_index].values
 for field, column_index in detected.items()
 })
 break
- else:
+if else:
   return None 
 if result is not None:
  result["Year"] = pd.to_numeric(
