@@ -1202,15 +1202,11 @@ Marital status and household composition are not
 available in the supplied cross-tabulations.
 """
 )
-st.markdown(
-"""
-**Definitions**:
-o	Labour-force participation is the share of the
-o	relevant population that is employed or unemployed.
-o	Unemployment is measured among the labour force.
-o	People outside the labour force are neither employed
-o	nor unemployed under the survey's classification.
-"""
+st.markdown("**Definitions:**")
+st.markdown ("-Labour-force participation is the share of the relevant population that is employed or unemployed.")
+st.markdown ("-Unemployment is measured among the labour force.")
+st.markdown ("-People outside the labour force are neither employed nor unemployed under the survey's classification.")
+
 	)
 st.markdown(
 """
