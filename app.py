@@ -206,7 +206,7 @@ result = pd.DataFrame({
 field: data.iloc[:, column_index].values
 for field, column_index in detected.items()
 })
- break
+break
 else:
   return None 
 if result is not None:
