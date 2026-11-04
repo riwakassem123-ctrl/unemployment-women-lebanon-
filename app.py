@@ -194,7 +194,7 @@ for value in raw.iloc[header_index].tolist()
  ]
 detected = {}
 for field, possible_names in aliases.items():
-for index, header in enumerate(headers):
+ for index, header in enumerate(headers):
 if header in possible_names:
  detected[field] = index
 break
