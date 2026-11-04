@@ -93,8 +93,8 @@ def find_column(columns, keywords):
 for column in columns:
  name = normalize_text(column)
 if any(keyword in name for keyword in keywords):
-return column
-return None
+ return column
+ return None
 
 def read_section(sheet_name, start_row, end_row):
  """Read a published survey table from columns A:D."""
@@ -142,7 +142,7 @@ The function supports:
 2.	Years in columns and indicators in rows.
 3.	"""
 if not HISTORICAL_FILE.exists():
-raise FileNotFoundError(
+ raise FileNotFoundError(
 f"Missing historical file: {HISTORICAL_FILE}"
 )
 sheets = pd.read_excel(
@@ -183,7 +183,7 @@ aliases = {
 required = list(aliases.keys())
 for sheet_name, raw in sheets.items():
 if raw.empty:
-continue
+ continue
 # Try to identify a header row.
 for header_index in range(
 min(15, len(raw))
@@ -196,7 +196,7 @@ detected = {}
 for field, possible_names in aliases.items():
 for index, header in enumerate(headers):
 if header in possible_names:
-detected[field] = index
+ detected[field] = index
 break
 if all(field in detected for field in required):
 data = raw.iloc[
@@ -210,7 +210,7 @@ break
 else:
 result = None
 if result is not None:
-result["Year"] = pd.to_numeric(
+ result["Year"] = pd.to_numeric(
 result["Year"],
 errors="coerce"
 )
@@ -232,7 +232,7 @@ subset=required[1:],
 how="all"
 )
 if not result.empty:
-return result.sort_values(
+ return result.sort_values(
 "Year"
 ).reset_index(drop=True)
 # Try the alternative layout:
@@ -243,7 +243,7 @@ first_cell = normalize_text(
 raw.iloc[row_index, 0]
 )
 if first_cell not in [
-"total unemployment",
+ "total unemployment",
 "total unemployment rate",
 "female unemployment",
 "female unemployment rate",
@@ -263,15 +263,15 @@ raw.iloc[0, column_index],
 errors="coerce"
 )
 if pd.notna(value) and 1991 <= value <= 2023:
-year_columns[column_index] = int(value)
+ year_columns[column_index] = int(value)
 if year_columns:
-series_rows = {}
+ series_rows = {}
 for row_index in range(len(raw)):
 label = normalize_text(
 raw.iloc[row_index, 0]
 )
 if "total" in label and "unemployment" in label:
-series_rows["Total unemployment"] = row_index
+ series_rows["Total unemployment"] = row_index
 elif (
 ("female" in label or "women" in label)
 and "unemployment" in label
@@ -283,7 +283,7 @@ and "unemployment" in label
 ):
 series_rows["Male unemployment"] = row_index
 if all(
-field in series_rows
+ field in series_rows
 for field in required[1:]
 ):
 records = []
@@ -308,7 +308,7 @@ raise ValueError(
 @st.cache_data(show_spinner=False)
 def load_survey():
 if not LFS_FILE.exists():
-raise FileNotFoundError(
+ raise FileNotFoundError(
 f"Missing survey file: {LFS_FILE}"
 )
 # Main indicators
@@ -441,7 +441,7 @@ if "unemployment" in normalize_text(key)
 None
 )
 if lfp_key is None or unemployment_key is None:
-st.error(
+ st.error(
 "The labour-force participation or unemployment "
 "indicator could not be identified in sheet EA1."
 )
@@ -950,7 +950,7 @@ na=False
 )
 ]
 if not university.empty:
-uw = university.iloc[0]["Women"]
+ uw = university.iloc[0]["Women"]
 um = university.iloc[0]["Men"]
 st.markdown(
 f"""
@@ -1069,7 +1069,7 @@ employment_status["Category"].str.lower().eq(
 )
 ]
 if not employees.empty:
-st.caption(
+ st.caption(
 f"Employees account for "
 f"{employees.iloc[0]['Women']:.1f}% of employed women "
 f"and {employees.iloc[0]['Men']:.1f}% of employed men "
