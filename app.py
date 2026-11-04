@@ -208,7 +208,7 @@ for field, column_index in detected.items()
 })
 break
 else:
-result = None
+ result = None
 if result is not None:
  result["Year"] = pd.to_numeric(
 result["Year"],
