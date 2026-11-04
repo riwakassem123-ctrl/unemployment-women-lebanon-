@@ -199,20 +199,21 @@ for field, possible_names in aliases.items():
     detected[field] = index
 break
 if all(field in detected for field in required):
- data = raw.iloc[
-header_index + 1:
-].copy()
-result = pd.DataFrame({
-field: data.iloc[:, column_index].values
-for field, column_index in detected.items()
-})
-break
-if else:
-  return None 
+    data = raw.iloc[header_index + 1:].copy()
+
+    result = pd.DataFrame({
+        field: data.iloc[:, column_index].values
+        for field, column_index in detected.items()
+    })
+    break
+
+else:
+    return None
+
 if result is not None:
- result["Year"] = pd.to_numeric(
-result["Year"],
-errors="coerce"
+    result["Year"] = pd.to_numeric(
+        result["Year"],
+        errors="coerce"
 )
 for column in required[1:]:
  result[column] = pd.to_numeric(
