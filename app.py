@@ -276,12 +276,12 @@ raw.iloc[row_index, 0]
 if "total" in label and "unemployment" in label:
  series_rows["Total unemployment"] = row_index
 elif (
-("female" in label or "women" in label)
+  ("female" in label or "women" in label)
 and "unemployment" in label
 ):
 series_rows["Female unemployment"] = row_index
 elif (
-("male" in label or "men" in label)
+  ("male" in label or "men" in label)
 and "unemployment" in label
 ):
 series_rows["Male unemployment"] = row_index
