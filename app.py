@@ -89,7 +89,7 @@ value = re.sub(r"[^a-z0-9]+", " ", value)
 return " ".join(value.split())
 
 def find_column(columns, keywords):
-"""Find a column using possible words in its name."""
+ """Find a column using possible words in its name."""
 for column in columns:
 name = normalize_text(column)
 if any(keyword in name for keyword in keywords):
@@ -97,7 +97,7 @@ return column
 return None
 
 def read_section(sheet_name, start_row, end_row):
-"""Read a published survey table from columns A:D."""
+ """Read a published survey table from columns A:D."""
 raw = pd.read_excel(
 LFS_FILE,
 sheet_name=sheet_name,
