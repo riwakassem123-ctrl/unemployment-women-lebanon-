@@ -182,7 +182,7 @@ aliases = {
 }
 required = list(aliases.keys())
 for sheet_name, raw in sheets.items():
-if raw.empty:
+ if raw.empty:
  continue
 # Try to identify a header row.
 for header_index in range(
@@ -191,7 +191,7 @@ min(15, len(raw))
 headers = [
 normalize_text(value)
 for value in raw.iloc[header_index].tolist()
-]
+ ]
 detected = {}
 for field, possible_names in aliases.items():
 for index, header in enumerate(headers):
@@ -199,7 +199,7 @@ if header in possible_names:
  detected[field] = index
 break
 if all(field in detected for field in required):
-data = raw.iloc[
+ data = raw.iloc[
 header_index + 1:
 ].copy()
 result = pd.DataFrame({
@@ -215,7 +215,7 @@ result["Year"],
 errors="coerce"
 )
 for column in required[1:]:
-result[column] = pd.to_numeric(
+ result[column] = pd.to_numeric(
 result[column],
 errors="coerce"
 )
@@ -239,7 +239,7 @@ if not result.empty:
 # Indicator names in the first column,
 # years across the columns.
 for row_index in range(len(raw)):
-first_cell = normalize_text(
+ first_cell = normalize_text(
 raw.iloc[row_index, 0]
 )
 if first_cell not in [
@@ -258,7 +258,7 @@ continue
 # Identify years in the first row.
 year_columns = {}
 for column_index in range(raw.shape[1]):
-value = pd.to_numeric(
+ value = pd.to_numeric(
 raw.iloc[0, column_index],
 errors="coerce"
 )
@@ -267,7 +267,7 @@ if pd.notna(value) and 1991 <= value <= 2023:
 if year_columns:
  series_rows = {}
 for row_index in range(len(raw)):
-label = normalize_text(
+ label = normalize_text(
 raw.iloc[row_index, 0]
 )
 if "total" in label and "unemployment" in label:
@@ -285,12 +285,12 @@ series_rows["Male unemployment"] = row_index
 if all(
  field in series_rows
 for field in required[1:]
-):
+ ):
 records = []
 for column_index, year in year_columns.items():
-record = {"Year": year}
+ record = {"Year": year}
 for field in required[1:]:
-row_index = series_rows[field]
+ row_index = series_rows[field]
 record[field] = pd.to_numeric(
 raw.iloc[row_index, column_index],
 errors="coerce"
@@ -298,10 +298,10 @@ errors="coerce"
 records.append(record)
 result = pd.DataFrame(records)
 return result.sort_values(
-"Year"
+ "Year"
 ).reset_index(drop=True)
 raise ValueError(
-"Could not identify the historical data layout. "
+ "Could not identify the historical data layout. "
 "The workbook should contain Year, Total unemployment, "
 "Female unemployment, and Male unemployment."
 )
@@ -319,7 +319,7 @@ header=None
 )
 headline = {}
 for row_index in range(6, 12):
-label = str(
+ label = str(
 headline_raw.iloc[row_index, 0]
 ).strip()
 headline[label] = {
@@ -395,7 +395,7 @@ status = status.dropna(
 subset=["Employed", "Unemployed"]
 )
 return (
-headline,
+ headline,
 age_lfp,
 education_lfp,
 age_unemployment,
@@ -406,7 +406,7 @@ job_search,
 status
 )
 try:
-historical = load_historical_data()
+ historical = load_historical_data()
 (
 headline,
 age_lfp,
@@ -419,7 +419,7 @@ job_search,
 status_by_gender
 ) = load_survey()
 except Exception as error:
-st.error(
+ st.error(
 "The dashboard could not load the datasets. "
 "Check the two filenames, Excel sheets, and data folder."
 )
@@ -430,14 +430,14 @@ lfp_key = next(
 (
 key for key in headline
 if "participation" in normalize_text(key)
-),
+ ),
 None
 )
 unemployment_key = next(
 (
 key for key in headline
 if "unemployment" in normalize_text(key)
-),
+ ),
 None
 )
 if lfp_key is None or unemployment_key is None:
@@ -529,7 +529,7 @@ story_tab, explore_tab, findings_tab, action_tab, methods_tab = st.tabs(
 )
 TAB 1: THE STORY
 with story_tab:
-st.header("The question behind the numbers")
+ st.header("The question behind the numbers")
 st.write(
 "How are gender, educational attainment and age "
 "associated with paid labour participation in Lebanon, "
@@ -568,7 +568,7 @@ st.info(
 
 TAB 2: EXPLORE THE DATA
 with explore_tab:
-st.header("Explore the labour-market landscape")
+ st.header("Explore the labour-market landscape")
 st.caption(
 "Hover over the charts for exact values. "
 "Use the filters to focus on selected age groups "
@@ -876,7 +876,7 @@ use_container_width=True
 )
 # TABLES
 with st.expander(
-"View the tables used in the charts"
+ "View the tables used in the charts"
 ):
 st.markdown("Participation by age")
 st.dataframe(
@@ -906,7 +906,7 @@ index=False
 )
 TAB 3: KEY FINDINGS
 with findings_tab:
-st.header("What does the evidence suggest?")
+ st.header("What does the evidence suggest?")
 st.write(
 "The comparisons below highlight observed differences. "
 "They should not be interpreted as proof of the reasons "
