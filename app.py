@@ -77,9 +77,7 @@ font-size: .88rem;
 </style>
 """, unsafe_allow_html=True)
 
---------------------------------------------------
-DATA LOADING FUNCTIONS
---------------------------------------------------
+
 def read_section(sheet_name, start_row, end_row):
 """Read a published survey table from columns A:D."""
 raw = pd.read_excel(
