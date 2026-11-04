@@ -13,9 +13,6 @@ DATA_DIR = BASE_DIR / "data"
 HISTORICAL_FILE = DATA_DIR / "unemployment rate women.xlsx"
 LFS_FILE = DATA_DIR / "Labor force 2022.xlsx"
 
---------------------------------------------------
-DESIGN SETTINGS
---------------------------------------------------
 COLORS = {
 "Women": "#D96C5F",
 "Men": "#087E8B",
@@ -41,9 +38,6 @@ PLOT_LAYOUT = {
 "legend_title_text": ""
 }
 
---------------------------------------------------
-PAGE STYLING
---------------------------------------------------
 st.markdown(
 """
 <style>
@@ -88,9 +82,6 @@ font-size: .88rem;
 unsafe_allow_html=True
 )
 
---------------------------------------------------
-HELPER FUNCTIONS
---------------------------------------------------
 def normalize_text(value):
 """Normalize text for matching column names and labels."""
 value = str(value).strip().lower()
@@ -139,9 +130,6 @@ table = table[
 ]
 return table.reset_index(drop=True)
 
---------------------------------------------------
-HISTORICAL UNEMPLOYMENT DATA
---------------------------------------------------
 @st.cache_data(show_spinner=False)
 def load_historical_data():
 """
@@ -317,10 +305,6 @@ raise ValueError(
 "The workbook should contain Year, Total unemployment, "
 "Female unemployment, and Male unemployment."
 )
-
---------------------------------------------------
-NATIONAL LABOUR FORCE SURVEY
---------------------------------------------------
 @st.cache_data(show_spinner=False)
 def load_survey():
 if not LFS_FILE.exists():
@@ -421,10 +405,6 @@ employment_status,
 job_search,
 status
 )
-
---------------------------------------------------
-LOAD BOTH FILES
---------------------------------------------------
 try:
 historical = load_historical_data()
 (
@@ -446,9 +426,6 @@ st.error(
 st.exception(error)
 st.stop()
 
---------------------------------------------------
-IDENTIFY HEADLINE INDICATORS
---------------------------------------------------
 lfp_key = next(
 (
 key for key in headline
@@ -475,10 +452,6 @@ unemployment = headline[unemployment_key]
 participation_gap = (
 lfp["Men"] - lfp["Women"]
 )
-
---------------------------------------------------
-HEADER
---------------------------------------------------
 st.markdown(
 """
 <div class="hero">
@@ -511,10 +484,6 @@ st.write(
 "and a cleaned historical unemployment dataset covering "
 "1991 to 2023."
 )
-
---------------------------------------------------
-HEADLINE INDICATORS
---------------------------------------------------
 st.subheader("The headline indicators")
 k1, k2, k3, k4 = st.columns(4)
 k1.metric(
@@ -549,10 +518,6 @@ as unemployed.
 """,
 unsafe_allow_html=True
 )
-
---------------------------------------------------
-DASHBOARD TABS
---------------------------------------------------
 story_tab, explore_tab, findings_tab, action_tab, methods_tab = st.tabs(
 [
 "The story",
@@ -562,10 +527,7 @@ story_tab, explore_tab, findings_tab, action_tab, methods_tab = st.tabs(
 "Methodology & sources"
 ]
 )
-
-==================================================
 TAB 1: THE STORY
-==================================================
 with story_tab:
 st.header("The question behind the numbers")
 st.write(
@@ -604,9 +566,7 @@ st.info(
 "It shows associations and differences, not causal effects."
 )
 
-==================================================
 TAB 2: EXPLORE THE DATA
-==================================================
 with explore_tab:
 st.header("Explore the labour-market landscape")
 st.caption(
@@ -614,9 +574,7 @@ st.caption(
 "Use the filters to focus on selected age groups "
 "and education levels."
 )
-# ----------------------------------------------
 # 1. HISTORICAL UNEMPLOYMENT
-# ----------------------------------------------
 st.subheader("1. Unemployment over time")
 historical_long = historical.melt(
 id_vars="Year",
@@ -665,9 +623,7 @@ st.caption(
 "All three series—total, female and male—are taken "
 "from the same file."
 )
-# ----------------------------------------------
 # 2. UNEMPLOYMENT BY GENDER IN 2022
-# ----------------------------------------------
 st.subheader("2. Unemployment by gender in 2022")
 gender_unemployment = pd.DataFrame({
 "Gender": ["Women", "Men"],
@@ -695,9 +651,7 @@ st.plotly_chart(
 fig,
 use_container_width=True
 )
-# ----------------------------------------------
 # 3. FEMALE UNEMPLOYMENT BY AGE
-# ----------------------------------------------
 st.subheader("3. Female unemployment by age")
 youth = age_unemployment[
 age_unemployment["Category"].isin(
@@ -741,9 +695,8 @@ st.plotly_chart(
 fig,
 use_container_width=True
 )
-# ----------------------------------------------
 # 4. PARTICIPATION BY AGE
-# ----------------------------------------------
+
 st.subheader("4. Labour-force participation by age")
 age_options = age_lfp["Category"].tolist()
 chosen_ages = st.multiselect(
@@ -779,9 +732,7 @@ st.plotly_chart(
 fig,
 use_container_width=True
 )
-# ----------------------------------------------
 # 5. PARTICIPATION BY EDUCATION
-# ----------------------------------------------
 st.subheader(
 "5. Labour-force participation by education"
 )
@@ -824,9 +775,7 @@ st.plotly_chart(
 fig,
 use_container_width=True
 )
-# ----------------------------------------------
 # 6. EDUCATION COMPOSITION OF EMPLOYED PEOPLE
-# ----------------------------------------------
 st.subheader(
 "6. Education composition of employed women and men"
 )
@@ -862,9 +811,8 @@ st.caption(
 "of employed people. It is not a participation rate "
 "by education."
 )
-# ----------------------------------------------
+
 # 7. EMPLOYMENT STATUS AMONG EMPLOYED PEOPLE
-# ----------------------------------------------
 st.subheader(
 "7. Employment status among employed people"
 )
@@ -895,9 +843,7 @@ st.plotly_chart(
 fig,
 use_container_width=True
 )
-# ----------------------------------------------
 # 8. JOB SEARCH METHODS
-# ----------------------------------------------
 st.subheader(
 "8. How unemployed people search for work"
 )
@@ -928,9 +874,7 @@ st.plotly_chart(
 fig,
 use_container_width=True
 )
-# ----------------------------------------------
 # TABLES
-# ----------------------------------------------
 with st.expander(
 "View the tables used in the charts"
 ):
@@ -960,10 +904,7 @@ index=False
 "participation_by_education_2022.csv",
 "text/csv"
 )
-
-==================================================
 TAB 3: KEY FINDINGS
-==================================================
 with findings_tab:
 st.header("What does the evidence suggest?")
 st.write(
@@ -971,9 +912,7 @@ st.write(
 "They should not be interpreted as proof of the reasons "
 "behind those differences."
 )
-# ----------------------------------------------
 # A. EDUCATION AND PARTICIPATION
-# ----------------------------------------------
 st.subheader(
 "A. The education–participation relationship"
 )
@@ -1026,9 +965,7 @@ in the 2022 survey.
 """,
 unsafe_allow_html=True
 )
-# ----------------------------------------------
 # B. AGE GENDER GAP
-# ----------------------------------------------
 st.subheader(
 "B. How does the gender gap vary by age?"
 )
@@ -1057,9 +994,7 @@ st.plotly_chart(
 fig,
 use_container_width=True
 )
-# ----------------------------------------------
 # C. ECONOMIC STATUS BY GENDER
-# ----------------------------------------------
 st.subheader(
 "C. Employment, unemployment and being outside the labour force"
 )
@@ -1097,9 +1032,7 @@ st.plotly_chart(
 fig,
 use_container_width=True
 )
-# ----------------------------------------------
 # D. EMPLOYMENT STATUS
-# ----------------------------------------------
 st.subheader(
 "D. What types of employment do women and men hold?"
 )
@@ -1142,9 +1075,7 @@ f"{employees.iloc[0]['Women']:.1f}% of employed women "
 f"and {employees.iloc[0]['Men']:.1f}% of employed men "
 "in the survey table."
 )
-# ----------------------------------------------
 # E. UNEMPLOYMENT BY EDUCATION
-# ----------------------------------------------
 st.subheader(
 "E. Unemployment by education"
 )
@@ -1175,9 +1106,12 @@ st.plotly_chart(
 fig,
 use_container_width=True
 )
-# ----------------------------------------------
 # LIMITATIONS
-# ----------------------------------------------
+The national survey tables are for 2022.
+Cross-sectional comparisons do not establish causality.
+Marital status and household composition are not
+available in the supplied cross-tabulations.
+"""
 st.warning(
 "The supplied survey tables do not provide the required "
 "cross-tabulations for marital status and household "
@@ -1186,10 +1120,8 @@ st.warning(
 "microdata or official tables."
 )
 
-==================================================
 TAB 4: FROM EVIDENCE TO ACTION
-==================================================
-with action_tab:
+#with action_tab:
 st.header("From evidence to action")
 st.write(
 "These are policy ideas suggested by the patterns "
@@ -1232,10 +1164,7 @@ conditions by gender and education to identify
 where gaps persist.
 """
 )
-
-==================================================
 TAB 5: METHODOLOGY AND SOURCES
-==================================================
 with methods_tab:
 st.header("Methodology and sources")
 st.markdown(
@@ -1292,10 +1221,6 @@ national survey provides the separate 2022
 cross-sectional analysis.
 """
 )
-
---------------------------------------------------
-FOOTER
---------------------------------------------------
 st.markdown("---")
 st.caption(
 "The Invisible Workforce · Lebanon · "
