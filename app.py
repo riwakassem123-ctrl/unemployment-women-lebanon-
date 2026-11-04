@@ -78,7 +78,7 @@ font-size: .88rem;
 """, unsafe_allow_html=True)
 
 
-def read_section(sheet_name, start_row, end_row):
+   def read_section(sheet_name, start_row, end_row):
 """Read a published survey table from columns A:D."""
 raw = pd.read_excel(
 LFS_FILE,
