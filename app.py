@@ -133,7 +133,7 @@ return table.reset_index(drop=True)
 @st.cache_data(show_spinner=False)
 def load_historical_data():
 """
-Load the cleaned historical unemployment workbook.
+ Load the cleaned historical unemployment workbook.
 Expected information:
 Year, Total unemployment, Female unemployment,
 Male unemployment.
