@@ -244,7 +244,7 @@ for row_index in range(len(raw)):
 raw.iloc[row_index, 0]
 )
 if first_cell not in [
-  "total unemployment",
+   "total unemployment",
 "total unemployment rate",
 "female unemployment",
 "female unemployment rate",
@@ -257,7 +257,7 @@ if first_cell not in [
 ]:
 continue
 # Identify years in the first row.
-year_columns = {}
+ year_columns = {}
 for column_index in range(raw.shape[1]):
  value = pd.to_numeric(
 raw.iloc[0, column_index],
