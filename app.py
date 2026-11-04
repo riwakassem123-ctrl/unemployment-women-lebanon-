@@ -86,7 +86,7 @@ def normalize_text(value):
   """Normalize text for matching column names and labels."""
 value = str(value).strip().lower()
 value = re.sub(r"[^a-z0-9]+", " ", value)
-    return " ".join(value.split())
+return " ".join(value.split())
 
 def find_column(columns, keywords):
 """Find a column using possible words in its name."""
