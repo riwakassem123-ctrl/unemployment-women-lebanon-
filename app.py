@@ -8,8 +8,7 @@ st.set_page_config(page_title="The Invisible Workforce | Lebanon", page_icon="ðŸ
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 LFS_FILE = DATA_DIR / "Labour-force-FULFS-2022.xlsx"
-WB_TOTAL_FILE = DATA_DIR / "worldbank_total_unemployment.xlsx"
-WB_MALE_FILE = DATA_DIR / "worldbank_male_unemployment.xlsx"
+WB_TOTAL_FILE = "unemployment rate  women.xlsx"
 
 COLORS = {"Women": "#D96C5F", "Men": "#087E8B", "Women & Men": "#D7A84B"}
 PLOT_LAYOUT = {
