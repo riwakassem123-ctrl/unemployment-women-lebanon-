@@ -186,10 +186,10 @@ for sheet_name, raw in sheets.items():
   continue
 	 # Try to identify a header row.
 for header_index in range(
-   min(15, len(raw))
+	 min(15, len(raw))
 ):
-headers = [
- normalize_text(value)
+ headers = [
+  normalize_text(value)
 for value in raw.iloc[header_index].tolist()
  ]
 detected = {}
