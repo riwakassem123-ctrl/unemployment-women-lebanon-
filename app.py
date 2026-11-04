@@ -76,14 +76,12 @@ font-size: .88rem;
 }
 </style>
 """, unsafe_allow_html=True)
-
-
-   def read_section(sheet_name, start_row, end_row):
-"""Read a published survey table from columns A:D."""
-raw = pd.read_excel(
-LFS_FILE,
-sheet_name=sheet_name,
-header=None
+def read_section(sheet_name, start_row, end_row):
+    """Read a published survey table from columns A:D."""
+    raw = pd.read_excel(
+    LFS_FILE,
+   sheet_name=sheet_name,
+   header=None
 )
 table = raw.iloc[start_row:end_row, 0:4].copy()
 table.columns = [
