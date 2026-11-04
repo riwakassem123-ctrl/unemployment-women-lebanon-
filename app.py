@@ -1,455 +1,298 @@
-from pathlib import Path
-
-import pandas as pd
-import plotly.express as px
-import streamlit as st
-
-# --------------------------------------------------
-# PAGE CONFIG
-# --------------------------------------------------
-
-st.set_page_config(
-    page_title="The Invisible Workforce | Lebanon",
-    page_icon="📊",
-    layout="wide"
-)
-
-# --------------------------------------------------
-# PATHS
-# --------------------------------------------------
-
-BASE_DIR = Path(__file__).parent
-DATA_DIR = BASE_DIR / "data"
-
-LFS_FILE = DATA_DIR / "Labour-force-FULFS-2022.xlsx"
-WOMEN_FILE = DATA_DIR / "women unemployment rate.xlsx"
-
-# --------------------------------------------------
-# COLORS
-# --------------------------------------------------
-
-COLORS = {
-    "Women": "#D96C5F",
-    "Men": "#087E8B",
-    "Women & Men": "#D7A84B"
-}
-
-PLOT_LAYOUT = dict(
-    template="plotly_white",
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(0,0,0,0)",
-    margin=dict(l=20, r=20, t=60, b=40)
-)
-
-# --------------------------------------------------
-# STYLING
-# --------------------------------------------------
+# ==================================================
+# HERO SECTION
+# ==================================================
 
 st.markdown("""
-<style>
-.stApp {
-    background:#F7F8F6;
-}
+<div class="hero">
+    <div style="
+        letter-spacing:.14em;
+        text-transform:uppercase;
+        font-size:.75rem;
+        color:#9DD4D3;
+        font-weight:700;">
+        Lebanon · Labour Market · 2022
+    </div>
 
-.hero{
-    background:linear-gradient(120deg,#122B3A,#1E5260);
-    padding:2rem;
-    border-radius:18px;
-    color:white;
-    margin-bottom:1rem;
-}
+    <h1>The Invisible Workforce</h1>
 
-.hero h1{
-    color:white;
-}
-
-.insight{
-    background:white;
-    padding:1rem;
-    border-left:4px solid #087E8B;
-    border-radius:8px;
-}
-</style>
+    <p>
+    <b>Understanding Gender, Education and Employment in Lebanon</b><br>
+    This interactive research dashboard explores how labour-force participation,
+    unemployment, education and employment characteristics differ between
+    women and men in Lebanon.
+    </p>
+</div>
 """, unsafe_allow_html=True)
 
-# --------------------------------------------------
-# HELPERS
-# --------------------------------------------------
+st.markdown("""
+This dashboard combines Lebanon's 2022 Labour Force and Household Living
+Conditions Survey with historical unemployment estimates from 1991–2023.
 
-def read_section(sheet_name, start_row, end_row):
+It is designed as an interactive research blog rather than a simple
+collection of charts. The goal is to investigate patterns in labour-force
+participation, unemployment, education and employment outcomes and to
+identify where women and men experience different labour-market realities.
+""")
 
-    raw = pd.read_excel(
-        LFS_FILE,
-        sheet_name=sheet_name,
-        header=None
-    )
+# ==================================================
+# KPI CARDS
+# ==================================================
 
-    df = raw.iloc[start_row:end_row, 0:4].copy()
+st.subheader("Key Labour Market Indicators")
 
-    df.columns = [
-        "Category",
-        "Women",
-        "Men",
-        "Women & Men"
-    ]
+k1, k2, k3, k4 = st.columns(4)
 
-    df["Category"] = df["Category"].astype(str).str.strip()
-
-    for c in ["Women", "Men", "Women & Men"]:
-        df[c] = pd.to_numeric(df[c], errors="coerce")
-
-    df = df.dropna(subset=["Women", "Men"])
-
-    return df
-
-
-@st.cache_data
-def load_survey():
-
-    headline_raw = pd.read_excel(
-        LFS_FILE,
-        sheet_name="EA1",
-        header=None
-    )
-
-    headline = {}
-
-    for row in range(6, 12):
-
-        label = str(
-            headline_raw.iloc[row, 0]
-        ).strip()
-
-        headline[label] = {
-            "Women": pd.to_numeric(
-                headline_raw.iloc[row, 1],
-                errors="coerce"
-            ),
-            "Men": pd.to_numeric(
-                headline_raw.iloc[row, 2],
-                errors="coerce"
-            ),
-            "Women & Men": pd.to_numeric(
-                headline_raw.iloc[row, 3],
-                errors="coerce"
-            )
-        }
-
-    age_lfp = read_section("EA40", 6, 17)
-
-    education_lfp = read_section(
-        "EA40",
-        18,
-        25
-    )
-
-    age_unemployment = read_section(
-        "EA39",
-        6,
-        17
-    )
-
-    education_unemployment = read_section(
-        "EA39",
-        18,
-        25
-    )
-
-    employed_education = read_section(
-        "EA6",
-        6,
-        13
-    )
-
-    return (
-        headline,
-        age_lfp,
-        education_lfp,
-        age_unemployment,
-        education_unemployment,
-        employed_education
-    )
-
-
-@st.cache_data
-def load_women_history():
-
-    df = pd.read_excel(WOMEN_FILE)
-
-    columns = list(df.columns)
-
-    year_col = columns[0]
-    value_col = columns[1]
-
-    df = df[[year_col, value_col]]
-
-    df.columns = ["Year", "Rate"]
-
-    df["Year"] = pd.to_numeric(
-        df["Year"],
-        errors="coerce"
-    )
-
-    df["Rate"] = pd.to_numeric(
-        df["Rate"],
-        errors="coerce"
-    )
-
-    return df.dropna()
-
-# --------------------------------------------------
-# LOAD DATA
-# --------------------------------------------------
-
-try:
-
-    (
-        headline,
-        age_lfp,
-        education_lfp,
-        age_unemployment,
-        education_unemployment,
-        employed_education
-    ) = load_survey()
-
-    women_history = load_women_history()
-
-except Exception as e:
-
-    st.error(str(e))
-    st.stop()
-
-# --------------------------------------------------
-# HEADLINE VALUES
-# --------------------------------------------------
-
-lfp = headline.get(
-    "Labour Force Participation Rate",
-    {}
+k1.metric(
+    "Women's Labour Force Participation",
+    f"{lfp.get('Women',0):.1f}%"
 )
 
-unemployment = headline.get(
-    "LU1: Unemployment rate",
-    {}
+k2.metric(
+    "Men's Labour Force Participation",
+    f"{lfp.get('Men',0):.1f}%"
 )
 
-participation_gap = (
-    lfp.get("Men", 0)
-    - lfp.get("Women", 0)
+k3.metric(
+    "Participation Gap",
+    f"{participation_gap:.1f} pp"
 )
 
-# --------------------------------------------------
-# HERO
-# --------------------------------------------------
+k4.metric(
+    "Women's Unemployment",
+    f"{unemployment.get('Women',0):.1f}%"
+)
 
 st.markdown(
-"""
-<div class="hero">
-<h1>The Invisible Workforce</h1>
-<p>
-Understanding gender,
-education and employment in Lebanon.
-</p>
+f"""
+<div class="insight">
+
+<b>Key Observation</b>
+
+Women's labour-force participation rate was
+{lfp.get('Women',0):.1f}% compared with
+{lfp.get('Men',0):.1f}% among men.
+
+The participation gap reached approximately
+{participation_gap:.1f} percentage points.
+
+Women's unemployment rate reached
+{unemployment.get('Women',0):.1f}%.
+
+These figures highlight that labour-market
+inequality is not only about unemployment but also
+about participation itself.
+
 </div>
 """,
 unsafe_allow_html=True
 )
 
-# --------------------------------------------------
-# METRICS
-# --------------------------------------------------
-
-c1, c2, c3, c4 = st.columns(4)
-
-c1.metric(
-    "Women LFP",
-    f"{lfp.get('Women',0):.1f}%"
-)
-
-c2.metric(
-    "Men LFP",
-    f"{lfp.get('Men',0):.1f}%"
-)
-
-c3.metric(
-    "Participation Gap",
-    f"{participation_gap:.1f} pp"
-)
-
-c4.metric(
-    "Women Unemployment",
-    f"{unemployment.get('Women',0):.1f}%"
-)
-
-# --------------------------------------------------
+# ==================================================
 # TABS
-# --------------------------------------------------
+# ==================================================
 
-tab1, tab2, tab3 = st.tabs([
-    "Overview",
+story_tab, explore_tab, findings_tab, action_tab, methods_tab = st.tabs([
+    "The Story",
     "Explore Data",
-    "Findings"
+    "Key Findings",
+    "From Evidence To Action",
+    "Methodology"
 ])
 
-# --------------------------------------------------
-# OVERVIEW
-# --------------------------------------------------
+# ==================================================
+# TAB 1
+# ==================================================
 
-with tab1:
+with story_tab:
 
-    st.markdown(
-        f"""
-        <div class="insight">
-        Labour-force participation was
-        {lfp.get('Women',0):.1f}% for women
-        compared with
-        {lfp.get('Men',0):.1f}% for men.
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    st.header("The Research Question")
 
-# --------------------------------------------------
-# EXPLORE
-# --------------------------------------------------
+    st.write("""
+    How are gender, age and educational attainment
+    associated with labour-market participation
+    in Lebanon?
+    """)
 
-with tab2:
+    st.write("""
+    Women and men participate differently in Lebanon's
+    labour market.
 
-    st.subheader(
-        "Female Unemployment Trend"
-    )
+    Understanding these differences requires looking
+    beyond unemployment alone and examining labour-force
+    participation, age patterns, educational attainment,
+    employment arrangements and job-search strategies.
+    """)
 
-    fig = px.line(
-        women_history,
-        x="Year",
-        y="Rate",
-        markers=True,
-        title="Female unemployment rate"
-    )
+    a, b, c = st.columns(3)
 
-    fig.update_traces(
-        line_color="#D96C5F"
-    )
+    with a:
+        st.markdown("""
+        ### Participation
 
-    fig.update_layout(
-        **PLOT_LAYOUT
-    )
+        Who participates in the labour market?
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
+        How large is the gender gap?
 
-    st.subheader(
-        "Participation By Age"
-    )
+        Which age groups participate most?
+        """)
 
-    age_long = age_lfp.melt(
-        id_vars="Category",
-        value_vars=["Women", "Men"],
-        var_name="Gender",
-        value_name="Rate"
-    )
+    with b:
+        st.markdown("""
+        ### Education
 
-    fig = px.bar(
-        age_long,
-        x="Category",
-        y="Rate",
-        color="Gender",
-        barmode="group",
-        color_discrete_map=COLORS
-    )
+        Does higher education increase labour-force
+        participation?
 
-    fig.update_layout(
-        **PLOT_LAYOUT
-    )
+        Does unemployment vary by education?
+        """)
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
+    with c:
+        st.markdown("""
+        ### Employment
 
-    st.subheader(
-        "Participation By Education"
-    )
+        Are women and men concentrated in different
+        forms of employment?
 
-    edu_long = education_lfp.melt(
-        id_vars="Category",
-        value_vars=["Women", "Men"],
-        var_name="Gender",
-        value_name="Rate"
-    )
+        How do unemployed people search for jobs?
+        """)
 
-    fig = px.bar(
-        edu_long,
-        x="Category",
-        y="Rate",
-        color="Gender",
-        barmode="group",
-        color_discrete_map=COLORS
-    )
+    st.info("""
+    This dashboard identifies patterns and associations.
 
-    fig.update_layout(
-        **PLOT_LAYOUT
-    )
+    It does not perform causal or regression analysis and
+    therefore cannot establish that age, education or
+    gender directly causes particular labour-market outcomes.
+    """)
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
+# ==================================================
+# TAB 2 INTRODUCTION
+# ==================================================
 
-# --------------------------------------------------
-# FINDINGS
-# --------------------------------------------------
+with explore_tab:
 
-with tab3:
+    st.header("Explore The Labour Market")
 
-    st.subheader(
-        "Education and Participation"
-    )
+    st.markdown("""
+    ### Dashboard Features
 
-    edu_gap = education_lfp.copy()
+    ✅ Historical unemployment trends (1991–2023)
 
-    edu_gap["Gap"] = (
-        edu_gap["Men"]
-        - edu_gap["Women"]
-    )
+    ✅ Labour-force participation by age
 
-    st.dataframe(
-        edu_gap,
-        use_container_width=True
-    )
+    ✅ Labour-force participation by education
 
-    st.subheader(
-        "Unemployment By Education"
-    )
+    ✅ Unemployment by age
 
-    unemp_long = education_unemployment.melt(
-        id_vars="Category",
-        value_vars=["Women", "Men"],
-        var_name="Gender",
-        value_name="Rate"
-    )
+    ✅ Unemployment by education
 
-    fig = px.bar(
-        unemp_long,
-        x="Category",
-        y="Rate",
-        color="Gender",
-        barmode="group",
-        color_discrete_map=COLORS
-    )
+    ✅ Education profile of employed workers
 
-    fig.update_layout(
-        **PLOT_LAYOUT
-    )
+    ✅ Employment status comparisons
 
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
+    ✅ Job-search behaviour
+
+    ✅ Interactive filters
+
+    ✅ Downloadable datasets
+    """)
+
+# ==================================================
+# TAB 3 INTRODUCTION
+# ==================================================
+
+with findings_tab:
+
+    st.header("Key Findings")
+
+    st.markdown("""
+    ### Main Findings To Investigate
+
+    1. Women participate in the labour market at much lower rates.
+
+    2. Unemployment alone does not explain the gender gap.
+
+    3. Education is associated with higher participation.
+
+    4. Female and male unemployment trends differ over time.
+
+    5. Employment arrangements vary across genders.
+
+    6. Job-search behaviour also differs.
+    """)
+
+# ==================================================
+# TAB 4
+# ==================================================
+
+with action_tab:
+
+    st.header("From Evidence To Action")
+
+    st.markdown("""
+    ### Education-To-Employment Bridge
+
+    Strengthen internships, apprenticeships and
+    employer partnerships.
+    """)
+
+    st.markdown("""
+    ### Work And Care Support
+
+    Expand childcare access, flexible work arrangements
+    and transportation support.
+    """)
+
+    st.markdown("""
+    ### Return-To-Work Programmes
+
+    Support women returning to paid employment through
+    skills-refresh and re-entry initiatives.
+    """)
+
+    st.markdown("""
+    ### Measure Progress
+
+    Monitor participation, hiring and employment outcomes
+    using gender-disaggregated indicators.
+    """)
+
+# ==================================================
+# TAB 5
+# ==================================================
+
+with methods_tab:
+
+    st.header("Methodology And Sources")
+
+    st.markdown("""
+    ### Source 1
+
+    Lebanon Labour Force and Household Living Conditions
+    Survey 2022.
+    """)
+
+    st.markdown("""
+    ### Source 2
+
+    Historical unemployment dataset 1991–2023.
+    """)
+
+    st.markdown("""
+    ### Important Definitions
+
+    Participation Rate:
+    Share of people who are employed or unemployed and
+    actively participating in the labour market.
+
+    Unemployment Rate:
+    Share of unemployed people within the labour force.
+
+    Employment Status:
+    Form of employment among employed workers.
+    """)
 
 st.markdown("---")
+
 st.caption(
-    "The Invisible Workforce | Lebanon"
+    "The Invisible Workforce | Lebanon | Interactive Labour Market Dashboard"
 )
