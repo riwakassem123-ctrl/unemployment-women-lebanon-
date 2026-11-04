@@ -34,7 +34,22 @@ st.markdown("""
     </p>
 </div>
 """, unsafe_allow_html=True)
+headline = load_survey()[0]
 
+lfp = headline.get(
+    "Labour Force Participation Rate",
+    {}
+)
+
+unemployment = headline.get(
+    "LU1: Unemployment rate",
+    {}
+)
+
+participation_gap = (
+    lfp.get("Men", 0)
+    - lfp.get("Women", 0)
+)
 st.markdown("""
 This dashboard combines Lebanon's 2022 Labour Force and Household Living
 Conditions Survey with historical unemployment estimates from 1991–2023.
@@ -301,7 +316,22 @@ with methods_tab:
     Employment Status:
     Form of employment among employed workers.
     """)
+headline = load_survey()[0]
 
+lfp = headline.get(
+    "Labour Force Participation Rate",
+    {}
+)
+
+unemployment = headline.get(
+    "LU1: Unemployment rate",
+    {}
+)
+
+participation_gap = (
+    lfp.get("Men", 0)
+    - lfp.get("Women", 0)
+)
 st.markdown("---")
 
 st.caption(
