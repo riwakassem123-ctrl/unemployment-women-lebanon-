@@ -244,7 +244,7 @@ for row_index in range(len(raw)):
 raw.iloc[row_index, 0]
 )
 if first_cell not in [
- "total unemployment",
+  "total unemployment",
 "total unemployment rate",
 "female unemployment",
 "female unemployment rate",
