@@ -189,7 +189,7 @@ for header_index in range(
   min(15, len(raw))
 ):
 headers = [
-normalize_text(value)
+ normalize_text(value)
 for value in raw.iloc[header_index].tolist()
  ]
 detected = {}
