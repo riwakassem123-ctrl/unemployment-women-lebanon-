@@ -18,7 +18,7 @@ FILE PATHS
 --------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
-HISTORICAL_FILE = DATA_DIR / "Women unemployment rate.xlsx"
+HISTORICAL_FILE = DATA_DIR / "unemployment rate women.xlsx"
 LFS_FILE = DATA_DIR / "Labor force 2022.xlsx"
 
 --------------------------------------------------
