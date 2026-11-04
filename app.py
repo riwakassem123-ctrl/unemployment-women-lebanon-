@@ -184,9 +184,9 @@ required = list(aliases.keys())
 for sheet_name, raw in sheets.items():
  if raw.empty:
   continue
-# Try to identify a header row.
+	 # Try to identify a header row.
 for header_index in range(
- min(15, len(raw))
+  min(15, len(raw))
 ):
 headers = [
 normalize_text(value)
