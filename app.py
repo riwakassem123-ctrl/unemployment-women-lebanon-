@@ -183,7 +183,7 @@ aliases = {
 required = list(aliases.keys())
 for sheet_name, raw in sheets.items():
  if raw.empty:
- continue
+  continue
 # Try to identify a header row.
 for header_index in range(
 min(15, len(raw))
