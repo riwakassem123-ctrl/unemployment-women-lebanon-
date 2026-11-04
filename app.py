@@ -1215,7 +1215,7 @@ The historical unemployment chart uses the three
 series in the cleaned historical workbook. The
 national survey provides the separate 2022
 cross-sectional analysis.
-"""
+
 )
 st.markdown("---")
 st.caption(
