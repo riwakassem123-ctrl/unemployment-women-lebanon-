@@ -1,6 +1,17 @@
+from pathlib import Path
+
+import pandas as pd
+import plotly.express as px
+import streamlit as st
 # ==================================================
 # HERO SECTION
 # ==================================================
+st.set_page_config(
+    page_title="The Invisible Workforce | Lebanon",
+    page_icon="📊",
+    layout="wide"
+)
+BASE_DIR = Path(__file__).parent
 
 st.markdown("""
 <div class="hero">
