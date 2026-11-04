@@ -3,19 +3,13 @@ import re
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-
---------------------------------------------------
-PAGE CONFIGURATION
---------------------------------------------------
 st.set_page_config(
 page_title="The Invisible Workforce | Lebanon",
 page_icon="📊",
 layout="wide"
 )
 
---------------------------------------------------
-FILE PATHS
---------------------------------------------------
+---
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 HISTORICAL_FILE = DATA_DIR / "unemployment rate women.xlsx"
