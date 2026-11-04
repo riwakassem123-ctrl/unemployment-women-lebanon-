@@ -339,7 +339,7 @@ unemployment = headline.get(
 participation_gap = (
 lfp.get("Men", float("nan"))
 o	lfp.get("Women", float("nan"))
-•	)
+
 --------------------------------------------------
 INTRODUCTION
 --------------------------------------------------
