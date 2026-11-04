@@ -91,7 +91,7 @@ return " ".join(value.split())
 def find_column(columns, keywords):
  """Find a column using possible words in its name."""
 for column in columns:
-name = normalize_text(column)
+ name = normalize_text(column)
 if any(keyword in name for keyword in keywords):
 return column
 return None
@@ -116,7 +116,7 @@ table["Category"]
 .str.strip()
 )
 for col in ["Women", "Men", "Women & Men"]:
-table[col] = pd.to_numeric(
+ table[col] = pd.to_numeric(
 table[col],
 errors="coerce"
 )
