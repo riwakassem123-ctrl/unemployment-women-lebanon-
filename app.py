@@ -457,7 +457,7 @@ historical_long = historical.melt(
         value_name="Rate"
     )
 
-    fig = px.line(
+fig = px.line(
         historical_long,
         x="Year",
         y="Rate",
@@ -465,24 +465,22 @@ historical_long = historical.melt(
         markers=True
     )
 
-    fig.update_layout(
+fig.update_layout(
         **PLOT_LAYOUT,
         hovermode="x unified"
     )
 
-    st.plotly_chart(
+st.plotly_chart(
         fig,
         use_container_width=True
     )
-
-    st.caption(
+ st.caption(
         "ILO modelled unemployment estimates."
     )
-    st.subheader(
+st.subheader(
         "2. Unemployment by Gender"
     )
-
-    gender_unemployment = pd.DataFrame({
+gender_unemployment = pd.DataFrame({
         "Gender": ["Women", "Men"],
         "Rate": [
             headline["women_unemployment"],
@@ -490,7 +488,7 @@ historical_long = historical.melt(
         ]
     })
 
-    fig = px.bar(
+fig = px.bar(
         gender_unemployment,
         x="Gender",
         y="Rate",
@@ -499,20 +497,18 @@ historical_long = historical.melt(
         color_discrete_map=COLORS
     )
 
-    fig.update_layout(
+fig.update_layout(
         **PLOT_LAYOUT,
         showlegend=False
     )
-
-    st.plotly_chart(
+ st.plotly_chart(
         fig,
         use_container_width=True
     )
-    st.subheader(
+st.subheader(
         "3. Unemployment by Age"
     )
-
-    age_un_long = age_unemployment.melt(
+ age_un_long = age_unemployment.melt(
         id_vars="Category",
         value_vars=[
             "Women",
@@ -522,7 +518,7 @@ historical_long = historical.melt(
         value_name="Unemployment"
     )
 
-    fig = px.line(
+ fig = px.line(
         age_un_long,
         x="Category",
         y="Unemployment",
@@ -530,36 +526,31 @@ historical_long = historical.melt(
         markers=True,
         color_discrete_map=COLORS
     )
-
-    fig.update_layout(
+ fig.update_layout(
         **PLOT_LAYOUT
     )
-
-    st.plotly_chart(
+ st.plotly_chart(
         fig,
         use_container_width=True
     )
-    st.subheader(
+st.subheader(
         "4. Participation by Age"
     )
-
-    age_options = (
+age_options = (
         age_lfp["Category"]
         .tolist()
     )
-
-    selected_ages = st.multiselect(
+ selected_ages = st.multiselect(
         "Select Age Groups",
         options=age_options,
         default=age_options
     )
-
-    age_view = age_lfp[
+ age_view = age_lfp[
         age_lfp["Category"]
         .isin(selected_ages)
     ]
 
-    age_long = age_view.melt(
+age_long = age_view.melt(
         id_vars="Category",
         value_vars=[
             "Women",
@@ -568,8 +559,7 @@ historical_long = historical.melt(
         var_name="Gender",
         value_name="Participation"
     )
-
-    fig = px.line(
+fig = px.line(
         age_long,
         x="Category",
         y="Participation",
@@ -578,15 +568,14 @@ historical_long = historical.melt(
         color_discrete_map=COLORS
     )
 
-    fig.update_layout(
+fig.update_layout(
         **PLOT_LAYOUT
     )
-
-    st.plotly_chart(
+st.plotly_chart(
         fig,
         use_container_width=True
     )
-    st.subheader(
+st.subheader(
         "5. Participation by Education"
     )
 
@@ -594,19 +583,16 @@ historical_long = historical.melt(
         education_lfp["Category"]
         .tolist()
     )
-
-    selected_education = st.multiselect(
+selected_education = st.multiselect(
         "Select Education Levels",
         options=education_options,
         default=education_options
     )
-
-    education_view = education_lfp[
+education_view = education_lfp[
         education_lfp["Category"]
         .isin(selected_education)
     ]
-
-    education_long = education_view.melt(
+education_long = education_view.melt(
         id_vars="Category",
         value_vars=[
             "Women",
@@ -615,8 +601,7 @@ historical_long = historical.melt(
         var_name="Gender",
         value_name="Participation"
     )
-
-    fig = px.bar(
+ fig = px.bar(
         education_long,
         x="Category",
         y="Participation",
@@ -624,20 +609,18 @@ historical_long = historical.melt(
         barmode="group",
         color_discrete_map=COLORS
     )
-
-    fig.update_layout(
+fig.update_layout(
         **PLOT_LAYOUT
     )
-
-    st.plotly_chart(
+st.plotly_chart(
         fig,
         use_container_width=True
     )
-    st.subheader(
+st.subheader(
         "6. Education Composition of Workers"
     )
 
-    employed_long = employed_education.melt(
+employed_long = employed_education.melt(
         id_vars="Category",
         value_vars=[
             "Women",
@@ -647,7 +630,7 @@ historical_long = historical.melt(
         value_name="Share"
     )
 
-    fig = px.bar(
+fig = px.bar(
         employed_long,
         x="Category",
         y="Share",
@@ -655,20 +638,17 @@ historical_long = historical.melt(
         barmode="group",
         color_discrete_map=COLORS
     )
-
-    fig.update_layout(
+fig.update_layout(
         **PLOT_LAYOUT
     )
-
-    st.plotly_chart(
+st.plotly_chart(
         fig,
         use_container_width=True
     )
-    st.subheader(
+st.subheader(
         "7. Employment Status"
     )
-
-    employment_long = employment_status.melt(
+ employment_long = employment_status.melt(
         id_vars="Category",
         value_vars=[
             "Women",
@@ -678,7 +658,7 @@ historical_long = historical.melt(
         value_name="Share"
     )
 
-    fig = px.bar(
+fig = px.bar(
         employment_long,
         x="Category",
         y="Share",
@@ -687,19 +667,18 @@ historical_long = historical.melt(
         color_discrete_map=COLORS
     )
 
-    fig.update_layout(
+fig.update_layout(
         **PLOT_LAYOUT
     )
 
-    st.plotly_chart(
+st.plotly_chart(
         fig,
         use_container_width=True
     )
-    st.subheader(
+st.subheader(
         "8. Job Search Methods"
     )
-
-    search_long = job_search.melt(
+search_long = job_search.melt(
         id_vars="Category",
         value_vars=[
             "Women",
@@ -708,8 +687,7 @@ historical_long = historical.melt(
         var_name="Gender",
         value_name="Share"
     )
-
-    fig = px.bar(
+fig = px.bar(
         search_long,
         x="Category",
         y="Share",
@@ -717,30 +695,24 @@ historical_long = historical.melt(
         barmode="group",
         color_discrete_map=COLORS
     )
-
-    fig.update_layout(
+fig.update_layout(
         **PLOT_LAYOUT
     )
-
-    st.plotly_chart(
+ st.plotly_chart(
         fig,
         use_container_width=True
     )
 with st.expander(
         "View Data Tables"
     ):
-
-        st.dataframe(age_lfp)
-
-        st.dataframe(
+st.dataframe(age_lfp)
+st.dataframe(
             education_lfp
         )
-
-        st.dataframe(
+st.dataframe(
             education_unemployment
         )
-
-    st.download_button(
+st.download_button(
         label="Download Participation Data",
         data=education_lfp.to_csv(
             index=False
@@ -753,15 +725,14 @@ with findings_tab:
     st.header(
         "What Does The Evidence Suggest?"
     )
-
-    st.write(
+ st.write(
         """
         These findings describe patterns
         observed in the survey.
         They do not establish causality.
         """
     )
-    st.subheader(
+st.subheader(
         "A. Education and Participation"
     )
 
@@ -774,8 +745,7 @@ with findings_tab:
         var_name="Gender",
         value_name="Participation"
     )
-
-    fig = px.bar(
+ fig = px.bar(
         education_long,
         x="Category",
         y="Participation",
@@ -783,11 +753,9 @@ with findings_tab:
         barmode="group",
         color_discrete_map=COLORS
     )
-
-    fig.update_layout(
+ fig.update_layout(
         **PLOT_LAYOUT
     )
-
     st.plotly_chart(
         fig,
         use_container_width=True
@@ -843,7 +811,36 @@ with findings_tab:
         ]
     )
 
-    fig.update_layout(
+ fig.update_layout(
+        **PLOT_LAYOUT
+    )
+st.plotly_chart(
+        fig,
+        use_container_width=True
+    )
+ st.subheader(
+        "C. Economic Status"
+    )
+ status_long = status_by_gender.melt(
+        id_vars="Gender",
+        value_vars=[
+            "Employed",
+            "Unemployed",
+            "Outside labour force"
+        ],
+        var_name="Status",
+        value_name="Share"
+    )
+ fig = px.bar(
+        status_long,
+        x="Gender",
+        y="Share",
+        color="Status",
+        barmode="stack",
+        color_discrete_map=STATUS_COLORS
+    )
+
+ fig.update_layout(
         **PLOT_LAYOUT
     )
 
@@ -854,8 +851,7 @@ with findings_tab:
     st.subheader(
         "C. Economic Status"
     )
-
-    status_long = status_by_gender.melt(
+status_long = status_by_gender.melt(
         id_vars="Gender",
         value_vars=[
             "Employed",
@@ -865,8 +861,7 @@ with findings_tab:
         var_name="Status",
         value_name="Share"
     )
-
-    fig = px.bar(
+ fig = px.bar(
         status_long,
         x="Gender",
         y="Share",
@@ -874,8 +869,7 @@ with findings_tab:
         barmode="stack",
         color_discrete_map=STATUS_COLORS
     )
-
-    fig.update_layout(
+fig.update_layout(
         **PLOT_LAYOUT
     )
 
@@ -883,43 +877,10 @@ with findings_tab:
         fig,
         use_container_width=True
     )
-    st.subheader(
-        "C. Economic Status"
-    )
-
-    status_long = status_by_gender.melt(
-        id_vars="Gender",
-        value_vars=[
-            "Employed",
-            "Unemployed",
-            "Outside labour force"
-        ],
-        var_name="Status",
-        value_name="Share"
-    )
-
-    fig = px.bar(
-        status_long,
-        x="Gender",
-        y="Share",
-        color="Status",
-        barmode="stack",
-        color_discrete_map=STATUS_COLORS
-    )
-
-    fig.update_layout(
-        **PLOT_LAYOUT
-    )
-
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
-    st.subheader(
+st.subheader(
         "D. Employment Categories"
     )
-
-    fig = px.bar(
+fig = px.bar(
         employment_long,
         x="Category",
         y="Share",
@@ -927,17 +888,14 @@ with findings_tab:
         barmode="group",
         color_discrete_map=COLORS
     )
-
-    fig.update_layout(
+ fig.update_layout(
         **PLOT_LAYOUT
     )
-
-    st.plotly_chart(
+st.plotly_chart(
         fig,
         use_container_width=True
     )
-
-    employees = employment_status[
+employees = employment_status[
         employment_status["Category"]
         .str.contains(
             "Employee",
@@ -957,11 +915,10 @@ with findings_tab:
             {employees.iloc[0]['Men']:.1f}% of employed men.
             """
         )
-    st.subheader(
+st.subheader(
         "E. Unemployment by Education"
     )
-
-    unemployment_long = education_unemployment.melt(
+unemployment_long = education_unemployment.melt(
         id_vars="Category",
         value_vars=[
             "Women",
@@ -970,8 +927,7 @@ with findings_tab:
         var_name="Gender",
         value_name="Rate"
     )
-
-    fig = px.bar(
+fig = px.bar(
         unemployment_long,
         x="Category",
         y="Rate",
@@ -979,16 +935,15 @@ with findings_tab:
         barmode="group",
         color_discrete_map=COLORS
     )
-
-    fig.update_layout(
+fig.update_layout(
         **PLOT_LAYOUT
     )
 
-    st.plotly_chart(
+st.plotly_chart(
         fig,
         use_container_width=True
     )
-    st.warning(
+st.warning(
         """
         The available survey tables do not
         provide marital status or household
@@ -1002,28 +957,28 @@ with action_tab:
     st.header(
         "From Evidence To Action"
     )
-    st.markdown("""
+st.markdown("""
     ### Education-to-Employment Bridge
 
     Strengthen internships,
     apprenticeships and
     employer partnerships.
     """)
-    st.markdown("""
+st.markdown("""
     ### Work and Care Support
 
     Improve access to childcare,
     flexible work and
     safe transportation.
     """)
-    st.markdown("""
+st.markdown("""
     ### Return-to-Work Pathways
 
     Support women returning
     to employment through
     retraining and mentoring.
     """)
-    st.markdown("""
+st.markdown("""
     ### Opportunity Tracking
 
     Monitor hiring,
@@ -1035,7 +990,7 @@ with methods_tab:
         "Methodology & Sources"
     )
 
-    st.markdown("""
+st.markdown("""
     **National Source**
 
     Lebanon Labour Force and
