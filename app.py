@@ -692,7 +692,7 @@ with explore_tab:
 st.plotly_chart(figure,use_container_width=True)
 key="education_participation"
 
-    draw_gender_bar(
+draw_gender_bar(
         filtered_education,
         "Participation",
         "Participation by completed education level",
