@@ -173,8 +173,7 @@ engine="openpyxl"
 table = raw.iloc[
 start_row:end_row,
 0:4
-].copy()
- 
+]copy()
 table.columns = [
 "Category",
 "Women",
