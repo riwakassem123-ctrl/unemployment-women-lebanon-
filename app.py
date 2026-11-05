@@ -434,11 +434,8 @@ with story_tab:
         At what ages are
         gender gaps largest?
         """)
- with explore_tab:
-     st.header(
-        "Explore the Labour Market"
-    )
-
+ with story_tab:
+    st.header("Story")
     st.caption(
         """
         Use filters and interactive charts
