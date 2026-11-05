@@ -93,7 +93,7 @@ def load_historical_data():
 def read_section(
     sheet_name,
     start_row,
-    end_row
+ end_row
 ):
 
     raw = read_sheet(sheet_name)
