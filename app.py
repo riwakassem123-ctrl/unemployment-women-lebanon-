@@ -643,7 +643,7 @@ with explore_tab:
     )
 
     st.plotly_chart(fig, use_container_width=True)
-     key="unemployemnt_by_age"
+    key="unemployemnt_by_age"
     st.subheader("3. Unemployment by age")
 
     draw_gender_line(
