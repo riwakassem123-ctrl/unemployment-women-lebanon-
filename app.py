@@ -311,7 +311,7 @@ raise ValueError(
 @st.cache_data(show_spinner=False)
 def load_survey():
 if not LFS_FILE.exists():
- raise FileNotFoundError(
+   raise FileNotFoundError(
 f"Missing survey file: {LFS_FILE}"
 )
 # Main indicators
@@ -319,7 +319,7 @@ headline_raw = pd.read_excel(
 LFS_FILE,
 sheet_name="EA1",
 header=None
-)
+ )
 headline = {}
 for row_index in range(6, 12):
  label = str(
