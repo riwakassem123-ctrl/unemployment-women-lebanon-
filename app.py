@@ -702,7 +702,7 @@ draw_gender_bar(
 st.subheader("6. Education composition of employed people")
 st.plotly_chart(figure,use_container_width=True)
 key="education_composition"
-    draw_gender_bar(
+draw_gender_bar(
         employed_education,
         "Share",
         "Educational composition within employed women and men",
@@ -717,7 +717,7 @@ key="education_composition"
     st.subheader("7. Employment status among employed people")
 st.plotly_chart(figure,use_container_width=True)
 key="employment_status"
-    draw_gender_bar(
+ draw_gender_bar(
         employment_status,
         "Share",
         "Employment status within employed women and men",
