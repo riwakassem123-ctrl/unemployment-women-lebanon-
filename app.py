@@ -121,69 +121,84 @@ st.markdown(
 # ============================================================
 
 def load_historical_data():
+
     if HISTORICAL_FILE is None or not HISTORICAL_FILE.exists():
         raise FileNotFoundError(
-            "Historical workbook not found. Place 'unemployment rate women.xlsx' "
-            "in the project folder or its data subfolder."
+            "Historical Excel workbook not found. "
+            "Check the filename and location."
         )
 
     excel = pd.ExcelFile(HISTORICAL_FILE)
-    found = None
+    found_data = []
 
-    # Find a header row containing Year, Female/Women and Male/Men.
     for sheet in excel.sheet_names:
-        raw = pd.read_excel(HISTORICAL_FILE, sheet_name=sheet, header=None)
-        for header_row in range(min(20, len(raw))):
-            labels = [
-                str(value).strip().lower() if pd.notna(value) else ""
-                for value in raw.iloc[header_row].tolist()
-            ]
-            year_col = next((i for i, value in enumerate(labels)
-                             if "year" in value), None)
-            female_col = next((i for i, value in enumerate(labels)
-                               if "female" in value or "women" in value), None)
-            male_col = next((i for i, value in enumerate(labels)
-                             if "male" in value or "men" in value), None)
-            total_col = next((i for i, value in enumerate(labels)
-                              if "total" in value or "overall" in value), None)
-            if year_col is not None and female_col is not None and male_col is not None:
-                found = (raw, header_row, year_col, female_col, male_col, total_col)
+
+        raw = pd.read_excel(
+            HISTORICAL_FILE,
+            sheet_name=sheet,
+            header=None
+        )
+
+        # Look for a column containing years
+        for col in range(raw.shape[1]):
+
+            years = pd.to_numeric(raw.iloc[:, col], errors="coerce")
+
+            valid_years = years.between(1991, 2023)
+
+            if valid_years.sum() < 5:
+                continue
+
+            # Look for three numeric series beside the year column
+            for start_col in range(col + 1, raw.shape[1] - 1):
+
+                numeric = raw.iloc[:, start_col:start_col + 3].apply(
+                    pd.to_numeric,
+                    errors="coerce"
+                )
+
+                if numeric.notna().sum().min() < 5:
+                    continue
+
+                result = pd.DataFrame({
+                    "Year": years,
+                    "Total unemployment": numeric.iloc[:, 0],
+                    "Female unemployment": numeric.iloc[:, 1],
+                    "Male unemployment": numeric.iloc[:, 2],
+                })
+
+                result = result.loc[valid_years].dropna(
+                    subset=[
+                        "Year",
+                        "Total unemployment",
+                        "Female unemployment",
+                        "Male unemployment"
+                    ]
+                )
+
+                if len(result) >= 5:
+                    result["Year"] = result["Year"].astype(int)
+                    found_data.append(result)
+
+                    break
+
+            if found_data:
                 break
-        if found is not None:
+
+        if found_data:
             break
 
-    if found is None:
+    if not found_data:
         raise ValueError(
-            "The historical workbook was found, but the code could not identify "
-            "columns named Year, Female/Women and Male/Men. Check the column headings."
+            "Could not identify the historical data layout. "
+            "The worksheet needs a year column and three unemployment "
+            "series. Please provide a screenshot of the worksheet."
         )
 
-    raw, header_row, year_col, female_col, male_col, total_col = found
-    rows = raw.iloc[header_row + 1:].copy()
+    result = found_data[0]
+    return result.sort_values("Year").reset_index(drop=True)
 
-    result = pd.DataFrame({
-        "Year": pd.to_numeric(rows.iloc[:, year_col], errors="coerce"),
-        "Female unemployment": pd.to_numeric(rows.iloc[:, female_col], errors="coerce"),
-        "Male unemployment": pd.to_numeric(rows.iloc[:, male_col], errors="coerce"),
-    })
 
-    if total_col is not None:
-        result["Total unemployment"] = pd.to_numeric(
-            rows.iloc[:, total_col], errors="coerce"
-        )
-    else:
-        result["Total unemployment"] = float("nan")
-
-    result = result.dropna(subset=[
-        "Year", "Female unemployment", "Male unemployment"
-    ])
-    result["Year"] = result["Year"].astype(int)
-    result = result.sort_values("Year").reset_index(drop=True)
-
-    if result.empty:
-        raise ValueError("No historical unemployment data rows were found.")
-
-    return result
 
 
 # 5. SURVEY DATA HELPERS
