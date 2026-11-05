@@ -2,10 +2,7 @@ from pathlib import Path
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-
-============================================================
-1. PAGE CONFIGURATION
-============================================================
+#1. PAGE CONFIGURATION
 st.set_page_config(
 page_title="The Invisible Workforce | Lebanon",
 page_icon="📊",
@@ -14,10 +11,7 @@ layout="wide"
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 LFS_FILE = DATA_DIR / "Labour-force-FULFS-2022.xlsx"
-
-============================================================
-2. COLORS AND CHART SETTINGS
-============================================================
+#2. COLORS AND CHART SETTING
 COLORS = {
 "Women": "#D96C5F",
 "Men": "#087E8B",
@@ -45,9 +39,8 @@ PLOT_LAYOUT = {
 "legend_title_text": ""
 }
 
-============================================================
-3. PAGE STYLING
-============================================================
+#3. PAGE STYLING
+
 st.markdown(
 """
 <style>
@@ -91,11 +84,8 @@ font-size: .88rem;
 """,
 unsafe_allow_html=True
 )
-
-============================================================
-4. HISTORICAL UNEMPLOYMENT DATA
+#4. HISTORICAL UNEMPLOYMENT DATA
 Values transcribed from the user's uploaded image.
-============================================================
 @st.cache_data
 def load_historical_data():
 years = list(range(1991, 2024))
