@@ -85,7 +85,7 @@ font-size: .88rem;
 unsafe_allow_html=True
 )
 #4. HISTORICAL UNEMPLOYMENT DATA
-  Values transcribed from "unemployment rate women.xlsx"
+Values transcribed from "unemployment rate women.xlsx"
 @st.cache_data
 def load_historical_data():
 years = list(range(1991, 2024))
