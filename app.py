@@ -256,11 +256,9 @@ def load_survey():
         job_search,
         status
     )
- @st.cache_data
+@st.cache_data
 def load_headline_indicators():
-
     raw = read_sheet("EA1")
-
     return {
         "women_participation":
             float(raw.iloc[6,3]),
