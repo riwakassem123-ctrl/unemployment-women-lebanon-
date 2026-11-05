@@ -116,17 +116,17 @@ st.markdown(
 
 # ============================================================
 # ============================================================
-# 4. HISTORICAL UNEMPLOYMENT DATA
-#    Loaded from the user's "unemployment rate women" Excel file
-# ============================================================
-if HISTORICAL_FILE is None or not HISTORICAL_FILE.exists():
+
+def load_historical_data():
+    if HISTORICAL_FILE is None or not HISTORICAL_FILE.exists():
         raise FileNotFoundError(
             "Historical Excel workbook not found. "
             "Check the filename and location."
         )
-excel = pd.ExcelFile(HISTORICAL_FILE)
-for sheet in excel.sheet_names:
-# Read the worksheet without assuming where the headings are
+
+    excel = pd.ExcelFile(HISTORICAL_FILE)
+
+    for sheet in excel.sheet_names:
         raw = pd.read_excel(
             HISTORICAL_FILE,
             sheet_name=sheet,
@@ -139,42 +139,48 @@ for sheet in excel.sheet_names:
 
         result = pd.DataFrame({
             "Year": pd.to_numeric(raw.iloc[:, 4], errors="coerce"),
+
             "Total unemployment": pd.to_numeric(
-                raw.iloc[:, 5].astype(str).str.replace("%", "", regex=False)
+                raw.iloc[:, 5].astype(str)
+                .str.replace("%", "", regex=False)
                 .str.replace(",", "", regex=False),
                 errors="coerce"
             ),
+
             "Female unemployment": pd.to_numeric(
-                raw.iloc[:, 6].astype(str).str.replace("%", "", regex=False)
+                raw.iloc[:, 6].astype(str)
+                .str.replace("%", "", regex=False)
                 .str.replace(",", "", regex=False),
                 errors="coerce"
             ),
+
             "Male unemployment": pd.to_numeric(
-                raw.iloc[:, 7].astype(str).str.replace("%", "", regex=False)
+                raw.iloc[:, 7].astype(str)
+                .str.replace("%", "", regex=False)
                 .str.replace(",", "", regex=False),
                 errors="coerce"
             )
         })
 
-        # Keep only valid years between 1991 and 2023
         result = result[
             result["Year"].between(1991, 2023)
         ].dropna()
 
         if not result.empty:
-
             result["Year"] = result["Year"].astype(int)
 
             result = (
                 result
                 .drop_duplicates(subset="Year")
                 .sort_values("Year")
-            )              .reset_index(drop=True)
-return result
-            
-raise ValueError(
+                .reset_index(drop=True)
+            )
+
+            return result
+
+    raise ValueError(
         "Historical data could not be read from columns E, F, G and H. "
-        "Please check that the workbook contains the expected data."
+        "Please check the workbook."
     )
 
 
