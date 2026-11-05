@@ -170,7 +170,7 @@ for sheet in excel.sheet_names:
                 .drop_duplicates(subset="Year")
                 .sort_values("Year")
             )              .reset_index(drop=True)
-  return result
+return result
             
 raise ValueError(
         "Historical data could not be read from columns E, F, G and H. "
