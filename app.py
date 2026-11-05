@@ -474,8 +474,8 @@ st.plotly_chart(
         fig,
         use_container_width=True
     )
- st.caption(
-        "ILO modelled unemployment estimates."
+st.caption(
+    "ILO modelled unemployment estimates."
     )
 st.subheader(
         "2. Unemployment by Gender"
