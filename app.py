@@ -93,9 +93,9 @@ def load_historical_data():
         engine="openpyxl"
     )
 
-    raw = raw.iloc[8:].copy()
+ raw = raw.iloc[8:].copy()
 
-    raw.columns = [
+ raw.columns = [
         "Year",
         "Total unemployment",
         "Female unemployment",
@@ -129,14 +129,12 @@ def read_section(
     end_row
 ):
 
-    raw = read_sheet(sheet_name)
-
-    table = raw.iloc[
-        start_row:end_row,
+raw = read_sheet(sheet_name)
+table = raw.iloc[
+start_row:end_row,
         0:4
     ].copy()
-
-    table.columns = [
+ table.columns = [
         "Category",
         "Women",
         "Men",
@@ -159,22 +157,19 @@ def read_section(
         .str.strip()
     )
 
-    table = table.dropna()
-
-    return table.reset_index(drop=True)
+table = table.dropna()
+return table.reset_index(drop=True)
  # =====================================================
 # LOAD SURVEY
 # =====================================================
 
 @st.cache_data
 def load_survey():
-
-    if not LFS_FILE.exists():
+if not LFS_FILE.exists():
         st.error(
             f"Missing file: {LFS_FILE}"
         )
         st.stop()
-
     # EA40
     age_lfp = read_section(
         "EA40",
@@ -434,13 +429,15 @@ with story_tab:
         At what ages are
         gender gaps largest?
         """)
-with story_tab:
-     st.header("Story")
-     st.caption(
+with explore_tab:
+
+    st.header("Explore Data")
+
+    st.caption(
         """
-    Use filters and interactive charts
-    to examine gender differences
-    across age and education.
+        Use filters and interactive charts
+        to examine gender differences
+        across age and education.
         """
     )
 st.subheader(
