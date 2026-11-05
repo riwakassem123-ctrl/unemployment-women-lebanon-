@@ -436,11 +436,11 @@ with story_tab:
         """)
 with story_tab:
      st.header("Story")
-st.caption(
+     st.caption(
         """
-        Use filters and interactive charts
-        to examine gender differences
-        across age and education.
+    Use filters and interactive charts
+    to examine gender differences
+    across age and education.
         """
     )
 st.subheader(
@@ -544,7 +544,7 @@ selected_ages = st.multiselect(
         options=age_options,
         default=age_options
     )
- age_view = age_lfp[
+age_view = age_lfp[
         age_lfp["Category"]
         .isin(selected_ages)
     ]
@@ -583,9 +583,9 @@ st.subheader(
         .tolist()
     )
 selected_education = st.multiselect(
-        "Select Education Levels",
-        options=education_options,
-        default=education_options
+"Select Education Levels",
+options=education_options,
+default=education_options
     )
 education_view = education_lfp[
         education_lfp["Category"]
@@ -704,8 +704,8 @@ st.plotly_chart(
 with st.expander(
         "View Data Tables"
     ):
-st.dataframe(age_lfp)
-st.dataframe(
+with st.expander("View Data Tables"):
+ st.dataframe(
             education_lfp
         )
 st.dataframe(
@@ -713,17 +713,15 @@ st.dataframe(
         )
 st.download_button(
         label="Download Participation Data",
-        data=education_lfp.to_csv(
-            index=False
-        )
-       encode("utf-8"),
+       data=education_lfp.to_csv(
+    index=False
+).encode("utf-8"), 
         file_name="participation.csv",
         mime="text/csv"
     )
 with findings_tab:
-
     st.header(
-        "What Does The Evidence Suggest?"
+    "What Does The Evidence Suggest?"
     )
 st.write(
         """
@@ -769,12 +767,10 @@ university = education_lfp[
     ]
 if not university.empty:
         female_rate = university.iloc[0]["Women"]
-
-        male_rate = university.iloc[0]["Men"]
-
-        st.info(
-            f"""
-            University education participation:
+ male_rate = university.iloc[0]["Men"]
+st.info(
+f"""
+University education participation:
 
             Women: {female_rate:.1f}%
 
@@ -788,11 +784,10 @@ if not university.empty:
          st.subheader(
         "B. Participation Gap by Age"
     )
-age_gap = age_lfp.copy()
 age_gap["Gap"] = (
-age_gap["Men"]
-age_gap["Women"]
-    )
+    age_gap["Men"]
+    - age_gap["Women"]
+)
 fig = px.bar(
         age_gap,
         x="Category",
@@ -942,9 +937,8 @@ st.warning(
         """
     )
 with action_tab:
-
     st.header(
-        "From Evidence To Action"
+    "From Evidence To Action"
     )
 st.markdown("""
     ### Education-to-Employment Bridge
