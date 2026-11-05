@@ -643,7 +643,7 @@ with explore_tab:
     )
 
     st.plotly_chart(fig, use_container_width=True)
-    key="unemployemnt_by_age"
+    key="unemployment_age_chart"
     st.subheader("3. Unemployment by age")
 
     draw_gender_line(
@@ -689,6 +689,8 @@ with explore_tab:
     filtered_education = education_lfp[
         education_lfp["Category"].isin(selected_education)
     ]
+st.plotly_chart(figure,use_container_width=True)
+key="education_participation"
 
     draw_gender_bar(
         filtered_education,
@@ -698,7 +700,8 @@ with explore_tab:
     )
 
     st.subheader("6. Education composition of employed people")
-
+st.plotly_chart(figure,use_container_width=True)
+key="education_composition"
     draw_gender_bar(
         employed_education,
         "Share",
@@ -712,7 +715,8 @@ with explore_tab:
     )
 
     st.subheader("7. Employment status among employed people")
-
+st.plotly_chart(figure,use_container_width=True)
+key="employment_status"
     draw_gender_bar(
         employment_status,
         "Share",
