@@ -730,7 +730,7 @@ draw_gender_bar(
         "Main job-search methods among unemployed people",
         "Share within unemployed group (%)",
     )
-    with st.expander("View the underlying survey tables"):
+with st.expander("View the underlying survey tables"):
         st.markdown("**Participation by age**")
         st.dataframe(age_lfp, use_container_width=True, hide_index=True)
 
