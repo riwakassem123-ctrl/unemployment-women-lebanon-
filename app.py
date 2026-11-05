@@ -124,10 +124,9 @@ if HISTORICAL_FILE is None or not HISTORICAL_FILE.exists():
             "Historical Excel workbook not found. "
             "Check the filename and location."
         )
- excel = pd.ExcelFile(HISTORICAL_FILE)
- for sheet in excel.sheet_names:
-
-        # Read the worksheet without assuming where the headings are
+excel = pd.ExcelFile(HISTORICAL_FILE)
+for sheet in excel.sheet_names:
+# Read the worksheet without assuming where the headings are
         raw = pd.read_excel(
             HISTORICAL_FILE,
             sheet_name=sheet,
