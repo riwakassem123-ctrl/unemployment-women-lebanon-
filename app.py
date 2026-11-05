@@ -286,10 +286,10 @@ and "unemployment" in label
 ):
  series_rows["Male unemployment"] = row_index
 if all(
- field in series_rows
+  field in series_rows
 for field in required[1:]
  ):
-records = []
+  records = []
 for column_index, year in year_columns.items():
   record = {"Year": year}
 for field in required[1:]:
