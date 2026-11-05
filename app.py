@@ -517,7 +517,7 @@ id_vars="Category",
         var_name="Gender",
         value_name="Unemployment"
     )
- fig = px.line(
+fig = px.line(
         age_un_long,
         x="Category",
         y="Unemployment",
@@ -539,7 +539,7 @@ age_options = (
         age_lfp["Category"]
         .tolist()
     )
- selected_ages = st.multiselect(
+selected_ages = st.multiselect(
         "Select Age Groups",
         options=age_options,
         default=age_options
@@ -600,7 +600,7 @@ education_long = education_view.melt(
         var_name="Gender",
         value_name="Participation"
     )
- fig = px.bar(
+fig = px.bar(
         education_long,
         x="Category",
         y="Participation",
@@ -647,7 +647,7 @@ st.plotly_chart(
 st.subheader(
         "7. Employment Status"
     )
- employment_long = employment_status.melt(
+employment_long = employment_status.melt(
         id_vars="Category",
         value_vars=[
             "Women",
@@ -697,7 +697,7 @@ fig = px.bar(
 fig.update_layout(
         **PLOT_LAYOUT
     )
- st.plotly_chart(
+st.plotly_chart(
         fig,
         use_container_width=True
     )
@@ -715,7 +715,8 @@ st.download_button(
         label="Download Participation Data",
         data=education_lfp.to_csv(
             index=False
-        ).encode("utf-8"),
+        )
+       encode("utf-8"),
         file_name="participation.csv",
         mime="text/csv"
     )
@@ -724,7 +725,7 @@ with findings_tab:
     st.header(
         "What Does The Evidence Suggest?"
     )
- st.write(
+st.write(
         """
         These findings describe patterns
         observed in the survey.
@@ -734,8 +735,7 @@ with findings_tab:
 st.subheader(
         "A. Education and Participation"
     )
-
-    education_long = education_lfp.melt(
+education_long = education_lfp.melt(
         id_vars="Category",
         value_vars=[
             "Women",
@@ -744,7 +744,7 @@ st.subheader(
         var_name="Gender",
         value_name="Participation"
     )
- fig = px.bar(
+fig = px.bar(
         education_long,
         x="Category",
         y="Participation",
@@ -752,14 +752,14 @@ st.subheader(
         barmode="group",
         color_discrete_map=COLORS
     )
- fig.update_layout(
+fig.update_layout(
         **PLOT_LAYOUT
     )
-    st.plotly_chart(
+st.plotly_chart(
         fig,
         use_container_width=True
     )
-    university = education_lfp[
+university = education_lfp[
         education_lfp["Category"]
         .str.contains(
             "University",
@@ -767,9 +767,7 @@ st.subheader(
             na=False
         )
     ]
-
-    if not university.empty:
-
+if not university.empty:
         female_rate = university.iloc[0]["Women"]
 
         male_rate = university.iloc[0]["Men"]
@@ -790,16 +788,12 @@ st.subheader(
          st.subheader(
         "B. Participation Gap by Age"
     )
-
-    age_gap = age_lfp.copy()
-
-    age_gap["Gap"] = (
-        age_gap["Men"]
-        -
-        age_gap["Women"]
+age_gap = age_lfp.copy()
+age_gap["Gap"] = (
+age_gap["Men"]
+age_gap["Women"]
     )
-
-    fig = px.bar(
+fig = px.bar(
         age_gap,
         x="Category",
         y="Gap",
@@ -809,45 +803,14 @@ st.subheader(
             "#D96C5F"
         ]
     )
-
- fig.update_layout(
+fig.update_layout(
         **PLOT_LAYOUT
     )
 st.plotly_chart(
         fig,
         use_container_width=True
     )
- st.subheader(
-        "C. Economic Status"
-    )
- status_long = status_by_gender.melt(
-        id_vars="Gender",
-        value_vars=[
-            "Employed",
-            "Unemployed",
-            "Outside labour force"
-        ],
-        var_name="Status",
-        value_name="Share"
-    )
- fig = px.bar(
-        status_long,
-        x="Gender",
-        y="Share",
-        color="Status",
-        barmode="stack",
-        color_discrete_map=STATUS_COLORS
-    )
-
- fig.update_layout(
-        **PLOT_LAYOUT
-    )
-
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
-    st.subheader(
+st.subheader(
         "C. Economic Status"
     )
 status_long = status_by_gender.melt(
@@ -860,7 +823,7 @@ status_long = status_by_gender.melt(
         var_name="Status",
         value_name="Share"
     )
- fig = px.bar(
+fig = px.bar(
         status_long,
         x="Gender",
         y="Share",
@@ -871,8 +834,35 @@ status_long = status_by_gender.melt(
 fig.update_layout(
         **PLOT_LAYOUT
     )
-
-    st.plotly_chart(
+st.plotly_chart(
+        fig,
+        use_container_width=True
+    )
+st.subheader(
+        "C. Economic Status"
+    )
+status_long = status_by_gender.melt(
+        id_vars="Gender",
+        value_vars=[
+            "Employed",
+            "Unemployed",
+            "Outside labour force"
+        ],
+        var_name="Status",
+        value_name="Share"
+    )
+fig = px.bar(
+        status_long,
+        x="Gender",
+        y="Share",
+        color="Status",
+        barmode="stack",
+        color_discrete_map=STATUS_COLORS
+    )
+fig.update_layout(
+        **PLOT_LAYOUT
+    )
+st.plotly_chart(
         fig,
         use_container_width=True
     )
@@ -887,7 +877,7 @@ fig = px.bar(
         barmode="group",
         color_discrete_map=COLORS
     )
- fig.update_layout(
+fig.update_layout(
         **PLOT_LAYOUT
     )
 st.plotly_chart(
@@ -902,7 +892,7 @@ employees = employment_status[
             na=False
         )
     ]
- if not employees.empty:
+if not employees.empty:
 
         st.success(
             f"""
@@ -965,10 +955,9 @@ st.markdown("""
     """)
 st.markdown("""
     ### Work and Care Support
-
-    Improve access to childcare,
-    flexible work and
-    safe transportation.
+improve access to childcare,
+flexible work and
+safe transportation.
     """)
 st.markdown("""
     ### Return-to-Work Pathways
@@ -1001,7 +990,7 @@ st.markdown("""
     EA37, EA39,
     EA40.
     """)
-    st.markdown("""
+st.markdown("""
     **Historical Source**
 
     Historical unemployment dataset
@@ -1009,7 +998,7 @@ st.markdown("""
 
     Total, female and male rates.
     """)
-    st.markdown("""
+st.markdown("""
     **Approach**
 
     Descriptive analysis of:
@@ -1020,7 +1009,7 @@ st.markdown("""
     - Employment status
     - Job-search behaviour
     """)
-    st.markdown("""
+st.markdown("""
     **Limitations**
 
     - Cross-sectional design
