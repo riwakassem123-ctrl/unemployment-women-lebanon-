@@ -278,8 +278,8 @@ if "total" in label and "unemployment" in label:
 elif (
     ("female" in label or "women" in label)
 and "unemployment" in label
-):
-series_rows["Female unemployment"] = row_index
+ ):
+ series_rows["Female unemployment"] = row_index
 elif (
    ("male" in label or "men" in label)
 and "unemployment" in label
