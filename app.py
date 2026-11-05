@@ -443,7 +443,7 @@ st.caption(
         across age and education.
         """
     )
-    st.subheader(
+st.subheader(
         "1. Historical Unemployment Trends"
     )
 
@@ -727,7 +727,7 @@ st.caption(
         fig,
         use_container_width=True
     )
-    with st.expander(
+with st.expander(
         "View Data Tables"
     ):
 
@@ -946,8 +946,7 @@ with findings_tab:
             na=False
         )
     ]
-
-    if not employees.empty:
+ if not employees.empty:
 
         st.success(
             f"""
