@@ -717,22 +717,20 @@ st.caption(
 st.subheader("7. Employment status among employed people")
 st.plotly_chart(figure,use_container_width=True)
 key="employment_status"
- draw_gender_bar(
+draw_gender_bar(
         employment_status,
         "Share",
         "Employment status within employed women and men",
         "Share within employed group (%)",
     )
 
-    st.subheader("8. Job-search methods")
-
-    draw_gender_bar(
+ st.subheader("8. Job-search methods")
+ draw_gender_bar(
         job_search,
         "Share",
         "Main job-search methods among unemployed people",
         "Share within unemployed group (%)",
     )
-
     with st.expander("View the underlying survey tables"):
         st.markdown("**Participation by age**")
         st.dataframe(age_lfp, use_container_width=True, hide_index=True)
