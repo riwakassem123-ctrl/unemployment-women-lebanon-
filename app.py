@@ -446,8 +446,7 @@ st.caption(
 st.subheader(
         "1. Historical Unemployment Trends"
     )
-
-    historical_long = historical.melt(
+historical_long = historical.melt(
         id_vars="Year",
         value_vars=[
             "Total unemployment",
