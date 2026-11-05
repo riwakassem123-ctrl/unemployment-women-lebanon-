@@ -508,8 +508,8 @@ st.plotly_chart(
 st.subheader(
         "3. Unemployment by Age"
     )
- age_un_long = age_unemployment.melt(
-        id_vars="Category",
+age_un_long = age_unemployment.melt(
+id_vars="Category",
         value_vars=[
             "Women",
             "Men"
