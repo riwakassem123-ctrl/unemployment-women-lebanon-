@@ -182,15 +182,12 @@ table.columns = [
 table["Category"] = (
 table["Category"]
 .astype(str)
-.str.strip()
-)
- 
+.str.strip() 
 for column in [
 "Women",
 "Men",
 "Women & Men"
-]:
- 
+]: 
 table[column] = pd.to_numeric(
 table[column],
 errors="coerce"
