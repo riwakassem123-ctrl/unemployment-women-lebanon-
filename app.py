@@ -170,7 +170,6 @@ LFS_FILE,
 sheet_name=sheet_name,
 header=None,
 engine="openpyxl"
-) 
 table = raw.iloc[
 start_row:end_row,
 0:4
