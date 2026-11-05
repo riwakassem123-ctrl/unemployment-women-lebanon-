@@ -436,7 +436,7 @@ with story_tab:
         """)
 with story_tab:
      st.header("Story")
-    st.caption(
+st.caption(
         """
         Use filters and interactive charts
         to examine gender differences
