@@ -861,7 +861,7 @@ with findings_tab:
     )
 
     st.plotly_chart(fig, use_container_width=True)
-    key=f"gender_bar_{value_name}_{title}"
+    key=f"gender_bar_{title}"
     st.subheader("D. Employment status among employed people")
 
     draw_gender_bar(
