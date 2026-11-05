@@ -394,9 +394,6 @@ def draw_gender_line(data, value_name, title, y_title):
         yaxis_title=y_title,
     )
 
-    st.plotly_chart(fig, use_container_width=True)
-
-
 # ============================================================
 # 7. LOAD AND VALIDATE DATA
 # ============================================================
@@ -613,7 +610,7 @@ with explore_tab:
     )
 
     st.plotly_chart(fig, use_container_width=True)
-
+    key="historical _unemployment _detail _chart"
     st.caption(
         f"Historical source: {HISTORICAL_FILE.name}. "
         "Values are loaded directly from the supplied Excel workbook."
@@ -646,7 +643,7 @@ with explore_tab:
     )
 
     st.plotly_chart(fig, use_container_width=True)
-
+     key="unemployemnt_by_age"
     st.subheader("3. Unemployment by age")
 
     draw_gender_line(
@@ -833,7 +830,7 @@ with findings_tab:
     )
 
     st.plotly_chart(fig, use_container_width=True)
-
+    key="economic_status_by_ gender"
     st.subheader("C. Economic status by gender")
 
     status_long = status_by_gender.melt(
@@ -864,7 +861,7 @@ with findings_tab:
     )
 
     st.plotly_chart(fig, use_container_width=True)
-
+    key="employment_status_amng_employed"
     st.subheader("D. Employment status among employed people")
 
     draw_gender_bar(
