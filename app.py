@@ -85,7 +85,7 @@ font-size: .88rem;
 unsafe_allow_html=True
 )
 #4. HISTORICAL UNEMPLOYMENT DATA
-Values transcribed from the user's uploaded image.
+  Values transcribed from "unemployment rate women.xlsx"
 @st.cache_data
 def load_historical_data():
 years = list(range(1991, 2024))
@@ -104,7 +104,7 @@ female = [
 9.999, 10.242, 10.399, 10.345, 10.671,
 11.210, 11.753, 12.195, 12.445, 12.812,
 13.176, 13.520, 13.898, 14.323, 16.249,
-15.874, 14.593, 14.480
+ 15.874, 14.593, 14.480
 ]
 male = [
 8.080, 7.694, 7.688, 7.778, 7.784,
