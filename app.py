@@ -723,8 +723,7 @@ draw_gender_bar(
         "Employment status within employed women and men",
         "Share within employed group (%)",
     )
-
- st.subheader("8. Job-search methods")
+st.subheader("8. Job-search methods")
  draw_gender_bar(
         job_search,
         "Share",
