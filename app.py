@@ -4,38 +4,6 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-# Project folder
-BASE_DIR = Path(__file__).resolve().parent
-
-# Search the project folder and its subfolders
-DATA_DIR = BASE_DIR / "data"
-
-# Historical document
-HISTORICAL_FILE = None
-
-# Automatically locate the survey Excel workbook
-excel_files = list(BASE_DIR.rglob("*.xlsx"))
-
-# Exclude temporary Excel files
-excel_files = [
-    file for file in excel_files
-    if not file.name.startswith("~$")
-]
-
-# Identify the labour-force workbook
-survey_matches = [
-    file for file in excel_files
-    if "labour" in file.name.lower()
-    or "labor" in file.name.lower()
-    or "unemployment rate women" in file.name.lower()
-]
-
-if len(survey_matches) == 1:
-    LFS_FILE = survey_matches[0]
-else:
-    LFS_FILE = None
-
-
 
 # ============================================================
 # 1. PAGE CONFIGURATION AND FILE PATHS
@@ -49,7 +17,30 @@ st.set_page_config(
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
-LFS_FILE = DATA_DIR / "Labour-force-FULFS-2022.xlsx"
+
+def find_input_file(expected_name, keywords):
+    """Find an Excel workbook in the project folder or its data subfolder."""
+    candidates = []
+    for root in (DATA_DIR, BASE_DIR):
+        if root.exists():
+            candidates.extend(
+                p for p in root.rglob("*")
+                if p.is_file() and p.suffix.lower() in {".xlsx", ".xls"}
+            )
+    expected = expected_name.lower().replace(" ", "").replace("-", "").replace("_", "")
+    for file in candidates:
+        stem = file.stem.lower().replace(" ", "").replace("-", "").replace("_", "")
+        if stem == expected:
+            return file
+    for file in candidates:
+        stem = file.stem.lower()
+        if all(word.lower() in stem for word in keywords):
+            return file
+    return None
+
+# Keep these two Excel workbooks beside app.py or inside a folder named data.
+LFS_FILE = find_input_file("Labour-force-FULFS-2022", ["labour", "2022"])
+HISTORICAL_FILE = find_input_file("unemployment rate women", ["unemployment", "women"])
 
 
 # ============================================================
@@ -124,58 +115,77 @@ st.markdown(
 
 
 # ============================================================
+# ============================================================
 # 4. HISTORICAL UNEMPLOYMENT DATA
-#    Values transcribed from the user's screenshot.
-#    Verify against the original table before formal submission.
+#    Loaded from the user's "unemployment rate women" Excel file
 # ============================================================
 
-@st.cache_data(show_spinner=False)
 def load_historical_data():
-    years = list(range(1991, 2024))
+    if HISTORICAL_FILE is None or not HISTORICAL_FILE.exists():
+        raise FileNotFoundError(
+            "Historical workbook not found. Place 'unemployment rate women.xlsx' "
+            "in the project folder or its data subfolder."
+        )
 
-    total = [
-        8.554, 8.225, 8.225, 8.321, 8.421, 8.413,
-        8.662, 8.571, 8.677, 8.641, 8.459, 8.248,
-        8.061, 7.850, 8.249, 8.679, 8.980, 7.666,
-        6.355, 6.768, 7.352, 7.952, 8.477, 8.841,
-        9.312, 9.794, 10.258, 10.755, 11.301,
-        13.252, 12.715, 11.105, 10.985,
-    ]
+    excel = pd.ExcelFile(HISTORICAL_FILE)
+    found = None
 
-    female = [
-        10.553, 8.812, 10.171, 10.256, 10.346,
-        10.328, 10.524, 10.437, 10.602, 10.462,
-        10.125, 9.373, 9.755, 9.572, 9.742,
-        9.999, 10.242, 10.399, 10.345, 10.671,
-        11.210, 11.753, 12.195, 12.445, 12.812,
-        13.176, 13.520, 13.898, 14.323, 16.249,
-        15.874, 14.593, 14.480,
-    ]
+    # Find a header row containing Year, Female/Women and Male/Men.
+    for sheet in excel.sheet_names:
+        raw = pd.read_excel(HISTORICAL_FILE, sheet_name=sheet, header=None)
+        for header_row in range(min(20, len(raw))):
+            labels = [
+                str(value).strip().lower() if pd.notna(value) else ""
+                for value in raw.iloc[header_row].tolist()
+            ]
+            year_col = next((i for i, value in enumerate(labels)
+                             if "year" in value), None)
+            female_col = next((i for i, value in enumerate(labels)
+                               if "female" in value or "women" in value), None)
+            male_col = next((i for i, value in enumerate(labels)
+                             if "male" in value or "men" in value), None)
+            total_col = next((i for i, value in enumerate(labels)
+                              if "total" in value or "overall" in value), None)
+            if year_col is not None and female_col is not None and male_col is not None:
+                found = (raw, header_row, year_col, female_col, male_col, total_col)
+                break
+        if found is not None:
+            break
 
-    male = [
-        8.080, 7.694, 7.688, 7.778, 7.784,
-        7.857, 8.066, 8.024, 8.254, 8.116,
-        7.979, 7.732, 7.755, 7.342, 7.784,
-        8.258, 8.602, 6.790, 4.999, 5.409,
-        5.978, 6.568, 7.094, 7.468, 7.941,
-        8.418, 8.880, 9.376, 9.392, 12.045,
-        11.515, 9.816, 9.705,
-    ]
+    if found is None:
+        raise ValueError(
+            "The historical workbook was found, but the code could not identify "
+            "columns named Year, Female/Women and Male/Men. Check the column headings."
+        )
 
-    if not (len(years) == len(total) == len(female) == len(male)):
-        raise ValueError("Historical data arrays do not have matching lengths.")
+    raw, header_row, year_col, female_col, male_col, total_col = found
+    rows = raw.iloc[header_row + 1:].copy()
 
-    return pd.DataFrame(
-        {
-            "Year": years,
-            "Total unemployment": total,
-            "Female unemployment": female,
-            "Male unemployment": male,
-        }
-    )
+    result = pd.DataFrame({
+        "Year": pd.to_numeric(rows.iloc[:, year_col], errors="coerce"),
+        "Female unemployment": pd.to_numeric(rows.iloc[:, female_col], errors="coerce"),
+        "Male unemployment": pd.to_numeric(rows.iloc[:, male_col], errors="coerce"),
+    })
+
+    if total_col is not None:
+        result["Total unemployment"] = pd.to_numeric(
+            rows.iloc[:, total_col], errors="coerce"
+        )
+    else:
+        result["Total unemployment"] = float("nan")
+
+    result = result.dropna(subset=[
+        "Year", "Female unemployment", "Male unemployment"
+    ])
+    result["Year"] = result["Year"].astype(int)
+    result = result.sort_values("Year").reset_index(drop=True)
+
+    if result.empty:
+        raise ValueError("No historical unemployment data rows were found.")
+
+    return result
 
 
-# ============================================================
 # 5. SURVEY DATA HELPERS
 # ============================================================
 
@@ -222,41 +232,24 @@ def find_indicator(indicators, keyword):
 
 @st.cache_data(show_spinner=False)
 def load_survey():
+    if LFS_FILE is None or not LFS_FILE.exists():
+        raise FileNotFoundError(
+            "2022 labour-force workbook not found. Place "
+            "'Labour-force-FULFS-2022.xlsx' in the project folder or data folder."
+        )
 
-    if LFS_FILE is None:
-        available_files = [
-            str(file.relative_to(BASE_DIR))
-            for file in BASE_DIR.rglob("*")
-            if file.is_file()
-        ]
-
-        st.error("Survey workbook not found.")
-
-        st.write("Excel files detected:", [
-            str(file.relative_to(BASE_DIR))
-            for file in excel_files
-        ])
-
-        st.write("Files detected in the project folder:", available_files)
-
-        st.stop()
-
-    # Continue reading the workbook
-    xls = pd.ExcelFile(LFS_FILE)
-
-    # Check required worksheets
+    available_sheets = pd.ExcelFile(LFS_FILE).sheet_names
     required_sheets = ["EA1", "EA3", "EA6", "EA8", "EA37", "EA39", "EA40"]
-
     missing_sheets = [
         sheet for sheet in required_sheets
-        if sheet not in xls.sheet_names
+        if sheet not in available_sheets
     ]
 
     if missing_sheets:
-        st.error(f"Missing worksheets: {missing_sheets}")
-        st.write("Available worksheets:", xls.sheet_names)
-        st.stop()
-
+        raise ValueError(
+            "The survey workbook is missing sheets: "
+            + ", ".join(missing_sheets)
+        )
 
     # EA1: Main labour-force indicators. Rows 6-11, columns A-D.
     headline_raw = pd.read_excel(
@@ -623,8 +616,8 @@ with explore_tab:
     st.plotly_chart(fig, use_container_width=True)
 
     st.caption(
-        "Historical values are transcribed from the supplied screenshot. "
-        "Check each value against the original table before submission."
+        f"Historical source: {HISTORICAL_FILE.name}. "
+        "Values are loaded directly from the supplied Excel workbook."
     )
 
     st.subheader("2. Unemployment by gender in 2022")
@@ -977,9 +970,9 @@ with methods_tab:
         """
         **Historical source**
 
-        Historical unemployment table supplied by the user,
-        showing total, female and male unemployment estimates
-        for Lebanon from 1991 to 2023.
+        Excel workbook supplied by the user: unemployment rate women.
+        The dashboard reads Year, Female/Women and Male/Men columns,
+        and reads Total/Overall when that column is available.
         """
     )
 
