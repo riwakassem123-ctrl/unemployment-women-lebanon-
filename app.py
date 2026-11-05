@@ -120,8 +120,6 @@ st.markdown(
 #    Loaded from the user's "unemployment rate women" Excel file
 # ============================================================
 
-def load_historical_data():
-
     if HISTORICAL_FILE is None or not HISTORICAL_FILE.exists():
         raise FileNotFoundError(
             "Historical Excel workbook not found. "
@@ -129,75 +127,61 @@ def load_historical_data():
         )
 
     excel = pd.ExcelFile(HISTORICAL_FILE)
-    found_data = []
 
     for sheet in excel.sheet_names:
 
+        # Read the worksheet without assuming where the headings are
         raw = pd.read_excel(
             HISTORICAL_FILE,
             sheet_name=sheet,
             header=None
         )
 
-        # Look for a column containing years
-        for col in range(raw.shape[1]):
+        # E = Year, F = Total, G = Female, H = Male
+        if raw.shape[1] < 8:
+            continue
 
-            years = pd.to_numeric(raw.iloc[:, col], errors="coerce")
+        result = pd.DataFrame({
+            "Year": pd.to_numeric(raw.iloc[:, 4], errors="coerce"),
+            "Total unemployment": pd.to_numeric(
+                raw.iloc[:, 5].astype(str).str.replace("%", "", regex=False)
+                .str.replace(",", "", regex=False),
+                errors="coerce"
+            ),
+            "Female unemployment": pd.to_numeric(
+                raw.iloc[:, 6].astype(str).str.replace("%", "", regex=False)
+                .str.replace(",", "", regex=False),
+                errors="coerce"
+            ),
+            "Male unemployment": pd.to_numeric(
+                raw.iloc[:, 7].astype(str).str.replace("%", "", regex=False)
+                .str.replace(",", "", regex=False),
+                errors="coerce"
+            )
+        })
 
-            valid_years = years.between(1991, 2023)
+        # Keep only valid years between 1991 and 2023
+        result = result[
+            result["Year"].between(1991, 2023)
+        ].dropna()
 
-            if valid_years.sum() < 5:
-                continue
+        if not result.empty:
 
-            # Look for three numeric series beside the year column
-            for start_col in range(col + 1, raw.shape[1] - 1):
+            result["Year"] = result["Year"].astype(int)
 
-                numeric = raw.iloc[:, start_col:start_col + 3].apply(
-                    pd.to_numeric,
-                    errors="coerce"
-                )
+            result = (
+                result
+                .drop_duplicates(subset="Year")
+                .sort_values("Year")
+                .reset_index(drop=True)
+            )
 
-                if numeric.notna().sum().min() < 5:
-                    continue
+            return result
 
-                result = pd.DataFrame({
-                    "Year": years,
-                    "Total unemployment": numeric.iloc[:, 0],
-                    "Female unemployment": numeric.iloc[:, 1],
-                    "Male unemployment": numeric.iloc[:, 2],
-                })
-
-                result = result.loc[valid_years].dropna(
-                    subset=[
-                        "Year",
-                        "Total unemployment",
-                        "Female unemployment",
-                        "Male unemployment"
-                    ]
-                )
-
-                if len(result) >= 5:
-                    result["Year"] = result["Year"].astype(int)
-                    found_data.append(result)
-
-                    break
-
-            if found_data:
-                break
-
-        if found_data:
-            break
-
-    if not found_data:
-        raise ValueError(
-            "Could not identify the historical data layout. "
-            "The worksheet needs a year column and three unemployment "
-            "series. Please provide a screenshot of the worksheet."
-        )
-
-    result = found_data[0]
-    return result.sort_values("Year").reset_index(drop=True)
-
+    raise ValueError(
+        "Historical data could not be read from columns E, F, G and H. "
+        "Please check that the workbook contains the expected data."
+    )
 
 
 
