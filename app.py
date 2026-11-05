@@ -699,7 +699,7 @@ draw_gender_bar(
         "Participation rate (%)",
     )
 
-    st.subheader("6. Education composition of employed people")
+st.subheader("6. Education composition of employed people")
 st.plotly_chart(figure,use_container_width=True)
 key="education_composition"
     draw_gender_bar(
