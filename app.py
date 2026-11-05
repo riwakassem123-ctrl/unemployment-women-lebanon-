@@ -709,12 +709,12 @@ draw_gender_bar(
         "Share of employed group (%)",
     )
 
-    st.caption(
+st.caption(
         "This chart shows the educational composition of employed people. "
         "It is not a participation rate by education."
     )
 
-    st.subheader("7. Employment status among employed people")
+st.subheader("7. Employment status among employed people")
 st.plotly_chart(figure,use_container_width=True)
 key="employment_status"
  draw_gender_bar(
