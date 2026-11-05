@@ -700,7 +700,7 @@ draw_gender_bar(
     )
 
 st.subheader("6. Education composition of employed people")
-st.plotly_chart(fig,use_container_width=True)
+st.plotly_chart(fig,use_container_width=True, key="education_composition")
 key="education_composition"
 draw_gender_bar(
         employed_education,
