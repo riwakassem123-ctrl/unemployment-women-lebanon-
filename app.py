@@ -434,7 +434,7 @@ with story_tab:
         At what ages are
         gender gaps largest?
         """)
-     with explore_tab:
+ with explore_tab:
      st.header(
         "Explore the Labour Market"
     )
