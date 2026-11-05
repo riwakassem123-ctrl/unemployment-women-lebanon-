@@ -179,7 +179,6 @@ table.columns = [
 "Women",
 "Men",
 "Women & Men"
-] 
 table["Category"] = (
 table["Category"]
 .astype(str)
