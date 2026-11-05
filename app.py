@@ -5,7 +5,6 @@ import plotly.express as px
 import streamlit as st
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
-File names
 HISTORICAL_FILE = DATA_DIR / "unemployment rate women.xlsx"
 LFS_FILE = DATA_DIR / "Labour-force-FULFS-2022.xlsx"
 
