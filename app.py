@@ -164,8 +164,7 @@ def read_section(
 sheet_name,
 start_row,
 end_row
-):
- 
+): 
 raw = pd.read_excel(
 LFS_FILE,
 sheet_name=sheet_name,
