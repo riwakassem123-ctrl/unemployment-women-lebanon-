@@ -182,7 +182,7 @@ table.columns = [
 table["Category"] = (
 table["Category"]
 .astype(str)
-.str.strip() 
+str.strip() 
 for column in [
 "Women",
 "Men",
