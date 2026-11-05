@@ -368,8 +368,8 @@ def draw_gender_bar(data, value_name, title, y_title):
         xaxis_tickangle=-12,
     )
 
-    st.plotly_chart(fig, use_container_width=True, key="row_gender_bar_chart")
-    key="row_gender_bar_chart"
+    st.plotly_chart(fig, use_container_width=True, key="row_gender_bar_chart_education")
+    key="row_gender_bar_chart_education "
 
 def draw_gender_line(data, value_name, title, y_title):
     if data.empty:
