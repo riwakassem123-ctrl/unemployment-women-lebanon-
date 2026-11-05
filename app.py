@@ -174,7 +174,7 @@ for sheet in excel.sheet_names:
 
             return result
 
-    raise ValueError(
+ raise ValueError(
         "Historical data could not be read from columns E, F, G and H. "
         "Please check that the workbook contains the expected data."
     )
