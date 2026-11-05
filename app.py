@@ -369,7 +369,7 @@ def draw_gender_bar(data, value_name, title, y_title):
     )
 
     st.plotly_chart(fig, use_container_width=True)
-
+    key="historical _unemployment _chart"
 
 def draw_gender_line(data, value_name, title, y_title):
     if data.empty:
