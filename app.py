@@ -3,10 +3,37 @@ from pathlib import Path
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+
+# Project folder
 BASE_DIR = Path(__file__).resolve().parent
+
+# Search the project folder and its subfolders
 DATA_DIR = BASE_DIR / "data"
-HISTORICAL_FILE = DATA_DIR / "unemployment rate women.xlsx"
-LFS_FILE = DATA_DIR / "Labour-force-FULFS-2022.xlsx"
+
+# Historical document
+HISTORICAL_FILE = None
+
+# Automatically locate the survey Excel workbook
+excel_files = list(BASE_DIR.rglob("*.xlsx"))
+
+# Exclude temporary Excel files
+excel_files = [
+    file for file in excel_files
+    if not file.name.startswith("~$")
+]
+
+# Identify the labour-force workbook
+survey_matches = [
+    file for file in excel_files
+    if "labour" in file.name.lower()
+    or "labor" in file.name.lower()
+    or "unemployment rate women" in file.name.lower()
+]
+
+if len(survey_matches) == 1:
+    LFS_FILE = survey_matches[0]
+else:
+    LFS_FILE = None
 
 
 
@@ -195,23 +222,41 @@ def find_indicator(indicators, keyword):
 
 @st.cache_data(show_spinner=False)
 def load_survey():
-    if not LFS_FILE.exists():
-        raise FileNotFoundError(
-            f"Survey workbook not found: {LFS_FILE}"
-        )
 
-    available_sheets = pd.ExcelFile(LFS_FILE).sheet_names
+    if LFS_FILE is None:
+        available_files = [
+            str(file.relative_to(BASE_DIR))
+            for file in BASE_DIR.rglob("*")
+            if file.is_file()
+        ]
+
+        st.error("Survey workbook not found.")
+
+        st.write("Excel files detected:", [
+            str(file.relative_to(BASE_DIR))
+            for file in excel_files
+        ])
+
+        st.write("Files detected in the project folder:", available_files)
+
+        st.stop()
+
+    # Continue reading the workbook
+    xls = pd.ExcelFile(LFS_FILE)
+
+    # Check required worksheets
     required_sheets = ["EA1", "EA3", "EA6", "EA8", "EA37", "EA39", "EA40"]
+
     missing_sheets = [
         sheet for sheet in required_sheets
-        if sheet not in available_sheets
+        if sheet not in xls.sheet_names
     ]
 
     if missing_sheets:
-        raise ValueError(
-            "The survey workbook is missing sheets: "
-            + ", ".join(missing_sheets)
-        )
+        st.error(f"Missing worksheets: {missing_sheets}")
+        st.write("Available worksheets:", xls.sheet_names)
+        st.stop()
+
 
     # EA1: Main labour-force indicators. Rows 6-11, columns A-D.
     headline_raw = pd.read_excel(
