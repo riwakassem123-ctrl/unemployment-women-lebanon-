@@ -690,7 +690,7 @@ with explore_tab:
         education_lfp["Category"].isin(selected_education)
     ]
 st.plotly_chart(fig,use_container_width=True)
-key="education_participation"
+key="education_participation_bar"
 
 draw_gender_bar(
         filtered_education,
