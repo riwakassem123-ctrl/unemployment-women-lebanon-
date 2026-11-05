@@ -435,8 +435,7 @@ with story_tab:
         gender gaps largest?
         """)
      with explore_tab:
-
-    st.header(
+     st.header(
         "Explore the Labour Market"
     )
 
