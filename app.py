@@ -159,8 +159,7 @@ def load_historical_data():
     return historical
 # ============================================================
 # 5. GENERAL SURVEY HELPER FUNCTION
-# ============================================================
- 
+# ============================================================ 
 def read_section(
 sheet_name,
 start_row,
