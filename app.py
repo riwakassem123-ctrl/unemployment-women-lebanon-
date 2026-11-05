@@ -501,7 +501,7 @@ fig.update_layout(
         **PLOT_LAYOUT,
         showlegend=False
     )
- st.plotly_chart(
+st.plotly_chart(
         fig,
         use_container_width=True
     )
@@ -517,7 +517,6 @@ st.subheader(
         var_name="Gender",
         value_name="Unemployment"
     )
-
  fig = px.line(
         age_un_long,
         x="Category",
@@ -526,10 +525,10 @@ st.subheader(
         markers=True,
         color_discrete_map=COLORS
     )
- fig.update_layout(
+fig.update_layout(
         **PLOT_LAYOUT
     )
- st.plotly_chart(
+st.plotly_chart(
         fig,
         use_container_width=True
     )
