@@ -169,9 +169,9 @@ for sheet in excel.sheet_names:
                 result
                 .drop_duplicates(subset="Year")
                 .sort_values("Year")
-                .reset_index(drop=True)
-return result
-            )
+            )              .reset_index(drop=True)
+  return result
+            
 raise ValueError(
         "Historical data could not be read from columns E, F, G and H. "
         "Please check that the workbook contains the expected data."
